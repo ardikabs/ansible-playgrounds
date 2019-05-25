@@ -1,0 +1,16 @@
+---
+# tasks file for docker
+
+- include: install.yml
+
+- include: swarm_manager.yml
+  delegate_to: "{{ swarm_managers | first }}"
+  run_once: yes
+  when:
+    - swarm_enabled
+    - (swarm_managers | length) > 1
+
+- include: swarm_member.yml
+  when:
+    - swarm_enabled
+    - inventory_hostname != ( swarm_managers | first)

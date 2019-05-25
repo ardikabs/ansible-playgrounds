@@ -1,0 +1,34 @@
+- name: Copying Certificate Authority
+  copy:
+    src: "{{ item }}"
+    dest: "{{ kube_homedir }}/certs"
+  with_items:
+  - "{{ tls_ca }}"
+  - "{{ tls_ca_key }}"
+  - "{{ tls_ca_config }}"
+
+- name: Generate CSR
+  template:
+    src: "{{ item }}-csr.json.j2"
+    dest: "{{ kube_homedir }}/certs/{{ item }}-csr.json"
+  with_items:
+  - kubelet
+  - kube-proxy
+  - calico
+  register: kubernetes_csr
+
+- name: Generating kubernetes worker certificates
+  args:
+    chdir: "{{ kube_homedir }}/certs"
+    creates: "{{ kube_homedir }}/certs/{{ item }}.pem"
+  shell: |
+   /usr/bin/cfssl gencert  \
+   -ca="{{ tls_ca }}" \
+   -ca-key="{{ tls_ca_key }}" \
+   -config="{{ tls_ca_config }}" \
+   -profile=kubernetes \
+   {{ item }}-csr.json | /usr/bin/cfssljson -bare {{ item }}
+  with_items:
+  - kubelet
+  - kube-proxy
+  - calico

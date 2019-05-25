@@ -1,0 +1,33 @@
+
+- name: Create kubelet configuration
+  template:
+    src: kubelet-config.yaml.j2
+    dest: "{{ kube_homedir }}/config/kubelet-config.yaml"
+
+- name: Create kube-proxy configuration
+  template:
+    src: kube-proxy-config.yaml.j2
+    dest: "{{ kube_homedir }}/config/kube-proxy-config.yaml"
+
+- name: Create calico cni configuration
+  template:
+    src: 10-calico.conf.j2
+    dest: "{{ kube_homedir }}/cni/net.d/10-calico.conf"
+
+- name: Create systemd unit
+  template:
+    src: "{{ item }}.service.j2"
+    dest: "/etc/systemd/system/{{ item }}.service"
+  with_items:
+  - kubelet
+  - kube-proxy
+
+- name: Start and enable services
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: restarted
+    daemon-reload: yes
+  with_items:
+  - kubelet
+  - kube-proxy

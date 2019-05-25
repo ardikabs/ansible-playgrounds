@@ -1,0 +1,27 @@
+---
+# defaults file for etcd
+csr:
+  C: ID
+  L: Jakarta
+  O: Kubernetes
+  OU: Kubernetes Cluster 01
+  ST: Jakarta Selatan
+
+tls_ca: ca.pem
+tls_ca_key: ca-key.pem
+tls_ca_config: ca-config.json
+tls_cert: etcd.pem
+tls_key: etcd-key.pem
+
+etcd_basedir: /etc/etcd
+etcd_datadir: /var/lib/etcd
+etcd_version: v3.3.9
+etcd_tls_enabled: true
+
+etcd_cluster_state: new
+etcd_cluster_token: etcd-cluster-0
+
+# ------- ETCD PROXY MODE -------
+# ------- ONLY SUPPORT FOR API v2 -------
+etcd_proxy: false
+etcd_proxy_mode: "on"

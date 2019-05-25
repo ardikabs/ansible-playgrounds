@@ -1,0 +1,5 @@
+
+- name: Worker availability check
+  delegate_to: "{{ groups['masters'][0] }}"
+  shell: "[ $({{ kube_homedir }}/bin/kubectl get nodes | wc -l) = {{ (play_hosts | length) + 1 }} ]"
+  run_once: yes

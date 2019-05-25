@@ -1,0 +1,15 @@
+
+- name: Readiness check (Component status)
+  args:
+    chdir: "{{ kube_homedir }}/config"
+  shell: "{{ kube_homedir }}/bin/kubectl get componentstatuses --kubeconfig=admin.kubeconfig"
+
+- name: Readiness check (Kubernetes healthz check)
+  uri:
+    url: http://127.0.0.1/healthz
+    method: GET
+    headers:
+      Host: "kubernetes.default.svc.cluster.local"
+    status_code: "200"
+  register: kubernetes_healthz
+  failed_when: kubernetes_healthz.status != 200

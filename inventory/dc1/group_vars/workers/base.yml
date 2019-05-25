@@ -1,0 +1,4 @@
+
+docker_version: 18.06.0~ce~3-0~ubuntu
+docker_nofile: 1048576
+docker_nproc: 1048576

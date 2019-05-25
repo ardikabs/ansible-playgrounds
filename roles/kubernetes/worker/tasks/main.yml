@@ -1,0 +1,23 @@
+---
+# tasks file for kube-worker
+
+- name: Create kubernetes directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{ kube_homedir }}"
+    - "{{ kube_homedir }}/bin"
+    - "{{ kube_homedir }}/certs"
+    - "{{ kube_homedir }}/config"
+    - "{{ kube_homedir }}/cni/net.d"
+    - "{{ kube_homedir }}/cni/bin"
+
+- include: install.yml
+- include: generate_certs.yml
+- include: generate_kubeconfig.yml
+- include: setup_cri.yml
+- include: setup_cni.yml
+- include: setup.yml
+- include: smoke_test.yml

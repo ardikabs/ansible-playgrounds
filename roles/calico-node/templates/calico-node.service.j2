@@ -1,0 +1,35 @@
+[Unit]
+Description=calico-node
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStartPre=-/usr/bin/docker rm -f calico-node
+ExecStart=/usr/bin/docker run --net=host --privileged \
+ --name=calico-node \
+ -e NODENAME={{ ansible_hostname }} \
+ -e IP={{ ansible_default_ipv4.address }} \
+ -e IP6= \
+ -e CALICO_NETWORKING_BACKEND=bird \
+ -e AS={{ calico_asn }} \
+ -e NO_DEFAULT_POOLS=true \
+ -e CALICO_LIBNETWORK_ENABLED=false \
+ -e ETCD_ENDPOINTS={{ etcd_endpoints }} \
+ {% if etcd_tls_enabled %}
+ -e ETCD_CA_CERT_FILE={{ calico_certdir }}/ca.pem \
+ -e ETCD_CERT_FILE={{ calico_certdir }}/calico.pem \
+ -e ETCD_KEY_FILE={{ calico_certdir }}/calico-key.pem \
+ {% endif %}
+ -v {{ calico_certdir }}:{{ calico_certdir }} \
+ -v /var/lib/calico:/var/lib/calico \
+ -v /var/log/calico:/var/log/calico \
+ -v /run/docker/plugins:/run/docker/plugins \
+ -v /lib/modules:/lib/modules \
+ -v /var/run/calico:/var/run/calico \
+ calico/node:{{ calico_version }}
+
+ExecStop=-/usr/bin/docker stop calico-node
+
+Restart=on-failure
+StartLimitBurst=3
+StartLimitInterval=60s

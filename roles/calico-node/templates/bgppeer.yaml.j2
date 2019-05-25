@@ -1,0 +1,9 @@
+---
+apiVersion: projectcalico.org/v3
+kind: BGPPeer
+metadata:
+  name: bgppeer-{{ calico_peer_ip }}
+spec:
+  node: {{ ansible_hostname }}
+  peerIP: {{ calico_peer_ip }}
+  asNumber: {{ calico_asn }}

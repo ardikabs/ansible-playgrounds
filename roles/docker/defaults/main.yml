@@ -1,0 +1,11 @@
+---
+# defaults file for docker
+
+version: 18.06.0~ce~3-0~{{ ansible_distribution | lower }}
+
+swarm_enabled: false
+swarm_bootstrap: false
+swarm_managers:
+  - 127.0.0.1
+swarm_workers:
+  - 127.0.0.1

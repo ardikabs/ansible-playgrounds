@@ -1,0 +1,33 @@
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/kubernetes/kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart={{ kube_homedir }}/bin/kubelet \
+  --max-pods={{ kube_max_pods }} \
+  --anonymous-auth=false \
+  --hostname-override={{ ansible_default_ipv4.address }} \
+  --config={{ kube_homedir }}/config/kubelet-config.yaml \
+  --kubeconfig={{ kube_homedir }}/config/kubelet.kubeconfig \
+  --authorization-mode={{ kube_authorization_mode }} \
+  --allow-privileged=true \
+  --image-pull-progress-deadline=2m \
+  \
+  --container-runtime={{ kube_cri }} \
+  --network-plugin={{ kube_network_plugin }} \
+  --cni-bin-dir={{ kube_homedir}}/cni/bin \
+  --cni-conf-dir={{ kube_homedir}}/cni/net.d \
+  --register-node=true \
+  --node-labels={{ kube_node_labels | join(',') }} \
+  --kube-reserved={{ kube_reserved }} \
+  --system-reserved={{ kube_system_reserved }} \
+  --v=2
+Restart=always
+RestartSec=10
+LimitNPROC={{ kube_nproc }}
+LimitNOFILE={{ kube_nofile }}
+
+[Install]
+WantedBy=multi-user.target

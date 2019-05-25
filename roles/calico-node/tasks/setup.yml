@@ -1,0 +1,42 @@
+- name: Create systemd unit (calico-node)
+  template:
+    src: "calico-node.service.j2"
+    dest: "/etc/systemd/system/calico-node.service"
+
+- name: Create calicoctl config
+  template:
+    src: "calicoctl.cfg.j2"
+    dest: "{{ calico_basedir }}/calicoctl.cfg"
+
+- name: Create BGPPeer config
+  template:
+    src: bgppeer.yaml.j2
+    dest: "{{ calico_basedir }}/conf/bgppeer.yaml"
+
+- name: Create IPPool config
+  template:
+    src: ippool.yaml.j2
+    dest: "{{ calico_basedir }}/conf/ippool.yaml"
+  run_once: yes
+  delegate_to: "{{ ansible_play_hosts | first }}"
+  when: calico_bootstrap
+
+- name: Start calico-node
+  systemd:
+    name: calico-node
+    state: restarted
+    daemon_reload: yes
+    enabled: yes
+
+- name: Apply IPPool
+  args:
+    chdir: "{{ calico_basedir }}/conf/"
+  shell: "/usr/local/bin/calicoctl apply -f ippool.yaml"
+  run_once: yes
+  delegate_to: "{{ ansible_play_hosts | first }}"
+  when: calico_bootstrap
+
+- name: Apply BGPPeer
+  args:
+    chdir: "{{ calico_basedir }}/conf/"
+  shell: "/usr/local/bin/calicoctl apply -f bgppeer.yaml"

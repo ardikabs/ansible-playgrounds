@@ -1,0 +1,40 @@
+---
+# defaults file for kube-master
+
+csr:
+  C: ID
+  L: Jakarta
+  O: Kubernetes
+  OU: Kubernetes Cluster 01
+  ST: Jakarta Selatan
+
+
+tls_ca: ca.pem
+tls_ca_key: ca-key.pem
+tls_ca_config: ca-config.json
+
+kube_bootstrap: false
+kube_version: "v1.12.0"
+kube_homedir: "/home/kubernetes"
+kube_apiserver_count: "{{ groups['masters']|length }}"
+kube_encryption_secret: "EToIrgBRKW8RJYO1AJC854U/1wpctz5X+Ng5WIY982A="
+
+kube_apiserver_external_address: 'apiserver.production.local'
+kube_service_ip: 10.32.0.1
+kube_service_cluster_ip_range: 10.32.0.0/24
+kube_service_node_port: 30000-32767
+kube_pod_cidr: 10.200.0.0/16
+
+kube_admission_plugins:
+  - NamespaceLifecycle
+  - NodeRestriction
+  - LimitRanger
+  - ServiceAccount
+  - DefaultStorageClass
+  - ResourceQuota
+
+kube_storage_backend: etcd3
+kube_storage_media_type: application/vnd.kubernetes.protobuf
+
+etcd_tls_enabled: true
+etcd_endpoints: "https://127.0.0.1:2379"

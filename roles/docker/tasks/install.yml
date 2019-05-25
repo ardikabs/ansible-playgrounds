@@ -1,0 +1,39 @@
+
+---
+- name: Purge old docker packages
+  apt:
+    name:
+    - docker.io
+    - lxc-docker
+    - docker
+    state: absent
+    purge: yes
+
+- name: Install prerequisites
+  apt:
+    name: "{{packages}}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - software-properties-common
+        - git
+
+- name: Add Docker PGP Key
+  apt_key:
+    url: https://download.docker.com/linux/{{ ansible_distribution | lower }}/gpg
+    state: present
+
+- name: Add Docker APT Repo
+  apt_repository:
+    repo: deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} stable
+    state: present
+
+- name: Installing Docker {{ version }}
+  apt:
+    name: "docker-ce={{ version }}"
+    state: present
+    update_cache: yes

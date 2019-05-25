@@ -1,0 +1,16 @@
+---
+- name: Download cfssl & cfssljson
+  when: generate_tls
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+    mode: '0655'
+  with_items:
+  - { url: "https://pkg.cfssl.org/R1.2/cfssl_linux-amd64",     dest: "/usr/bin/cfssl"}
+  - { url: "https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64", dest: "/usr/bin/cfssljson" }
+
+- name: Download calicoctl binaries
+  get_url:
+    url: "https://github.com/projectcalico/calicoctl/releases/download/{{ kube_calico_version }}/calicoctl-linux-amd64"
+    dest: "/usr/local/bin/calicoctl"
+    mode: '0655'

@@ -1,0 +1,7 @@
+
+etcd_base_dir: /etc/etcd
+etcd_data_dir: /data/etcd
+etcd_version: v3.3.9
+
+etcd_cluster_state: new
+etcd_cluster_token: etcd-cluster-0
