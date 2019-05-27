@@ -30,7 +30,7 @@
   tags:
     - setup
 
-- include: monitoring.yml
+- include: proxy.yml
   tags:
     - setup
 

@@ -1,10 +1,9 @@
 
 - name: Install Nginx
-  apt:
+  include_role:
     name: nginx
-    state: latest
 
-- name: Create kubernetes health check
+- name: Create kubernetes health check path
   template:
     src: kubernetes-healthz-nginx.conf.j2
     dest: "/etc/nginx/sites-available/kubernetes.conf"
