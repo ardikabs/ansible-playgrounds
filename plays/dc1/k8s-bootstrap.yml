@@ -1,11 +1,17 @@
 ---
+- name: Prechecking Host
+  hosts: all
+  become: yes
+  gather_facts: no
+  roles:
+    - common
+
 - name: Bootstrap etcd Cluster
   hosts: etcd
   become: yes
   gather_facts: yes
   roles:
-  - common
-  - etcd
+    - etcd
 
 - name: Bootstrap Master Nodes
   hosts: masters
@@ -14,8 +20,7 @@
   vars:
     - kube_bootstrap: true
   roles:
-  - common
-  - kubernetes/master
+    - kubernetes/master
 
 - name: Bootstrap Worker Nodes
   hosts: workers
@@ -24,5 +29,4 @@
   vars:
     - kube_bootstrap: true
   roles:
-  - common
-  - kubernetes/worker
+    - kubernetes/worker

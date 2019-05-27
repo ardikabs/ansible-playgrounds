@@ -38,6 +38,7 @@
     - calico_cluster_cidr: "{{ kube_pod_cidr }}"
     - calico_peer_ip: "{{ kube_calico_peer_ip }}"
     - calico_ippool_name: "{{ kube_apiserver_external_address }}"
+    - calico_asn: "{{ kube_calico_asn }}"
   when: kube_cri == "docker"
 
 - name: Remove unnecessary package

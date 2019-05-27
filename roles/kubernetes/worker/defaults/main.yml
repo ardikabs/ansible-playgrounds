@@ -37,6 +37,7 @@ kube_network_plugin: cni
 kube_cni_version: v0.6.0
 kube_calico_version: v3.5.5
 kube_calico_peer_ip: "{{ ansible_default_ipv4.address }}"
+kube_calico_asn: 64567
 
 # ---- Runtime Configuration ----
 docker_version: 18.06.0~ce~3-0~ubuntu
