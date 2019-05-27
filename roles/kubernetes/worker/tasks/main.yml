@@ -13,11 +13,31 @@
     - "{{ kube_homedir }}/config"
     - "{{ kube_homedir }}/cni/net.d"
     - "{{ kube_homedir }}/cni/bin"
+  tags:
+    - install
 
 - include: install.yml
+  tags:
+    - install
+
 - include: generate_certs.yml
+  tags:
+    - tls
+
 - include: generate_kubeconfig.yml
+  tags:
+    - kubeconfig
+
 - include: setup_cri.yml
+  tags:
+    - setup
+
 - include: setup_cni.yml
+  tags:
+    - setup
+
 - include: setup.yml
+  tags:
+    - setup
+
 - include: smoke_test.yml

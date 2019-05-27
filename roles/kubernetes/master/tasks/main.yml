@@ -11,10 +11,27 @@
     - "{{ kube_homedir }}/certs"
     - "{{ kube_homedir }}/config"
     - "{{ kube_homedir }}/bin"
+  tags:
+    - install
 
 - include: install.yml
+  tags:
+    - install
+
 - include: generate_certs.yml
+  tags:
+    - tls
+
 - include: generate_kubeconfig.yml
+  tags:
+    - kubeconfig
+
 - include: setup.yml
+  tags:
+    - setup
+
 - include: monitoring.yml
+  tags:
+    - setup
+
 - include: smoke_test.yml
