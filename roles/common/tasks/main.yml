@@ -1,0 +1,7 @@
+
+- name: Ensure python is present
+  raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+  register: output
+  changed_when:
+    - output.stdout != ""
+    - output.stdout != "\r\n"

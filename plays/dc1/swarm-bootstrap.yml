@@ -1,16 +1,4 @@
 ---
-- name: Ensure python is present
-  hosts: all
-  become: yes
-  gather_facts: no
-  pre_tasks:
-    - name: Ensure python 2.7 is present
-      raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
-      register: output
-      changed_when:
-        - output.stdout != ""
-        - output.stdout != "\r\n"
-
 - name: Swarm manager bootstrap
   hosts: swarms
   become: yes
@@ -21,4 +9,5 @@
     - swarm_managers: "{{ groups['managers'] }}"
     - swarm_workers: "{{ groups['workers'] }}"
   roles:
+    - common
     - docker
