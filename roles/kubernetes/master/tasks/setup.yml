@@ -6,7 +6,7 @@
 
 - name: Create systemd unit
   template:
-    src: "{{ item }}.service.j2"
+    src: "services-{{ kube_version }}/{{ item }}.service.j2"
     dest: "/etc/systemd/system/{{ item }}.service"
   with_items:
   - kube-apiserver
@@ -32,13 +32,6 @@
   args:
     chdir: "{{ kube_homedir }}/config"
     stdin: "{{ rbac_kubelet }}"
-  shell: "{{ kube_homedir }}/bin/kubectl --kubeconfig=admin.kubeconfig apply -f - "
+  shell: "/usr/local/bin/kubectl --kubeconfig=admin.kubeconfig apply -f - "
   run_once: yes
   when: kube_bootstrap
-
-# - name: Remove unnecessary package
-#   shell: "rm -rf {{ item }}"
-#   with_items:
-#   - "/usr/bin/cfssl"
-#   - "/usr/bin/cfssljson"
-

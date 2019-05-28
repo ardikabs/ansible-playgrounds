@@ -20,6 +20,9 @@
   tags:
     - install
 
+- include: tweaking.yml
+- include: disable_swap.yml
+
 - include: generate_certs.yml
   tags:
     - tls

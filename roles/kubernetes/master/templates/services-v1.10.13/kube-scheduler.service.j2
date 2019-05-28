@@ -1,0 +1,17 @@
+[Unit]
+Description=Kubernetes Scheduler
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+
+[Service]
+ExecStart={{ kube_homedir }}/bin/kube-scheduler \
+  --leader-elect=true \
+  --master=http://127.0.0.1:8080 \
+  --v=2
+
+Restart=on-failure
+RestartSec=5
+LimitNPROC={{ kube_nproc }}
+LimitNOFILE={{ kube_nofile }}
+
+[Install]
+WantedBy=multi-user.target

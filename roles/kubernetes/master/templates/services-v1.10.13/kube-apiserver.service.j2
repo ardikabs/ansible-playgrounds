@@ -1,32 +1,32 @@
 [Unit]
-Description=kube-apiserver API Server
-Documentation=https://github.com/kube-apiserver/kube-apiserver
+Description=Kubernetes API Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
 ExecStart={{ kube_homedir }}/bin/kube-apiserver \
+  --admission-control=NamespaceLifecycle,LimitRanger,ServiceAccount,ResourceQuota \
   --advertise-address={{ ansible_default_ipv4.address }} \
-  --bind-address=0.0.0.0 \
-  --allow-privileged=true \
   --apiserver-count={{ kube_apiserver_count }} \
+  --service-cluster-ip-range={{ kube_service_cluster_ip_range }} \
+  --service-node-port-range={{ kube_service_node_port }} \
+  \
+  --bind-address=0.0.0.0 \
+  --insecure-bind-address=0.0.0.0 \
+  --allow-privileged=true \
+  --enable-swagger-ui=true \
+  \
+  --authorization-mode=Node,RBAC \
+  --runtime-config= \
+  \
+  --feature-gates=AdvancedAuditing=false \
   --audit-log-maxage=30 \
   --audit-log-maxbackup=3 \
   --audit-log-maxsize=100 \
-  --audit-log-path=/var/log/audit.log \
-  --authorization-mode=Node,RBAC \
-  --client-ca-file={{ kube_homedir }}/certs/ca.pem \
-  --enable-admission-plugins={{ kube_admission_plugins | join(',') }} \
-  --enable-swagger-ui=true \
-  --event-ttl=1h \
+  --audit-log-path=/var/log/kube-audit.log \
   \
-  --experimental-encryption-provider-config={{ kube_homedir }}/config/encryption-config.yaml \
   --kubelet-certificate-authority={{ kube_homedir }}/certs/ca.pem \
-  --kubelet-client-certificate={{ kube_homedir }}/certs/kube-apiserver.pem \
-  --kubelet-client-key={{ kube_homedir }}/certs/kube-apiserver-key.pem \
-  --kubelet-https=true \
-  --runtime-config=api/all \
+  --client-ca-file={{ kube_homedir }}/certs/ca.pem \
   --service-account-key-file={{ kube_homedir }}/certs/service-account.pem \
-  --service-cluster-ip-range={{ kube_service_cluster_ip_range }} \
-  --service-node-port-range={{ kube_service_node_port}} \
   --tls-cert-file={{ kube_homedir }}/certs/kube-apiserver.pem \
   --tls-private-key-file={{ kube_homedir }}/certs/kube-apiserver-key.pem \
   \
@@ -38,9 +38,13 @@ ExecStart={{ kube_homedir }}/bin/kube-apiserver \
   --etcd-certfile={{ kube_homedir }}/certs/kube-apiserver.pem \
   --etcd-keyfile={{ kube_homedir }}/certs/kube-apiserver-key.pem \
   {% endif %}
+  \
   --v=2
+
 Restart=on-failure
 RestartSec=5
+LimitNPROC=1000000
+LimitNOFILE=1000000
 
 [Install]
 WantedBy=multi-user.target

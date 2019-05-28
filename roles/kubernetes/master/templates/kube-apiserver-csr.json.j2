@@ -5,7 +5,7 @@
     "kubernetes",
     "kubernetes.default",
     "kubernetes.default.svc",
-    "{{ kube_service_ip }}",
+    "{{ kube_service_ip.stdout }}",
     "127.0.0.1"{% if kube_apiserver_external_address %},
     "{{ kube_apiserver_external_address }}"{% endif %}
   ],

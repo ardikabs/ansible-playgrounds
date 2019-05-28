@@ -2,7 +2,7 @@
 - name: Readiness check (Component status)
   args:
     chdir: "{{ kube_homedir }}/config"
-  shell: "{{ kube_homedir }}/bin/kubectl get componentstatuses --kubeconfig=admin.kubeconfig"
+  shell: "/usr/local/bin/kubectl get componentstatuses --kubeconfig=admin.kubeconfig"
 
 - name: Readiness check (Kubernetes healthz check)
   uri:

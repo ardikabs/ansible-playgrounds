@@ -8,15 +8,15 @@
   - { url: "https://pkg.cfssl.org/R1.2/cfssl_linux-amd64",     dest: "/usr/bin/cfssl"}
   - { url: "https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64", dest: "/usr/bin/cfssljson" }
 
-- name: Download Kubernetes Binaries
+- name: Download kubernetes binaries
   get_url:
-    url: "https://storage.googleapis.com/kubernetes-release/release/{{ kube_version }}/bin/linux/amd64/{{ item }}"
-    dest: "{{ kube_homedir }}/bin"
+    url: "https://storage.googleapis.com/kubernetes-release/release/{{ kube_version }}/bin/linux/amd64/{{ item.unit }}"
+    dest: "{{ item.dest }}"
     mode: '0655'
   with_items:
-  - "kubelet"
-  - "kube-proxy"
-  - "kubectl"
+  - { unit: "kubelet", dest: "{{ kube_homedir }}/bin"}
+  - { unit: "kube-proxy", dest: "{{ kube_homedir }}/bin"}
+  - { unit: "kubectl", dest: "/usr/bin/local"}
 
 - name: Download kubernetes worker dependencies
   apt:

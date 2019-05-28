@@ -1,3 +1,7 @@
+- name: Setup kubernetes service IP
+  shell: "ipcalc {{ kube_service_cluster_ip_range }} | awk '/HostMin/ {print $2}'"
+  register: kube_service_ip
+
 - name: Copying Certificate Authority
   copy:
     src: "{{ item }}"
