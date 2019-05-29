@@ -7,7 +7,6 @@ csr:
   OU: Kubernetes Cluster 01
   ST: Jakarta Selatan
 
-generate_tls: false
 tls_ca_config: ca-config.json
 tls_ca: ca.pem
 tls_ca_key: ca-key.pem
@@ -22,6 +21,7 @@ calico_asn: 64567
 calico_ippool_name: "mypool"
 calico_ipip_mode: Always
 calico_peer_ip: "{{ ansible_default_ipv4.gateway }}"
+calico_tls_enabled: false
 
 etcd_tls_enabled: false
 etcd_endpoints: "https://localhost:2379"

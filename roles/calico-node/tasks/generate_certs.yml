@@ -1,7 +1,7 @@
 - name: Copying Certificate Authority
   copy:
     src: "{{ item }}"
-    dest: "{{ etcd_basedir }}/certs/"
+    dest: "{{ calico_basedir }}/certs/"
   with_items:
   - "{{tls_ca}}"
   - "{{tls_ca_key}}"
@@ -9,7 +9,7 @@
 
 - name: Generate CSR
   template:
-    src: "calico-node-csr.json.j2"
+    src: "calico-csr.json.j2"
     dest: "{{ calico_basedir }}/certs/calico-csr.json"
 
 - name: Generating calico certificates

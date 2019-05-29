@@ -1,6 +1,6 @@
 ---
 - name: Download cfssl & cfssljson
-  when: generate_tls
+  when: calico_tls_enabled
   get_url:
     url: "{{ item.url }}"
     dest: "{{ item.dest }}"
@@ -11,6 +11,6 @@
 
 - name: Download calicoctl binaries
   get_url:
-    url: "https://github.com/projectcalico/calicoctl/releases/download/{{ kube_calico_version }}/calicoctl-linux-amd64"
+    url: "https://github.com/projectcalico/calicoctl/releases/download/{{ calico_version }}/calicoctl-linux-amd64"
     dest: "/usr/local/bin/calicoctl"
     mode: '0655'
