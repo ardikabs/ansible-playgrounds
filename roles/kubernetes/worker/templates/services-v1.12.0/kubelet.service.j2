@@ -6,12 +6,9 @@ Requires=docker.service
 
 [Service]
 ExecStart={{ kube_homedir }}/bin/kubelet \
-  --max-pods={{ kube_max_pods }} \
-  --anonymous-auth=false \
   --hostname-override={{ ansible_default_ipv4.address }} \
   --config={{ kube_homedir }}/config/kubelet-config.yaml \
   --kubeconfig={{ kube_homedir }}/config/kubelet.kubeconfig \
-  --authorization-mode={{ kube_authorization_mode }} \
   --allow-privileged=true \
   --image-pull-progress-deadline=2m \
   \

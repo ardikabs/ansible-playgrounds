@@ -23,7 +23,6 @@ kube_cri: docker
 kube_max_pods: 40
 
 kube_apiserver_external_address: "apiserver.production.local"
-kube_authorization_mode: AlwaysAllow
 kube_node_labels:
   - nodename={{ ansible_hostname }}
   - node-role.kubernetes.io/worker=true

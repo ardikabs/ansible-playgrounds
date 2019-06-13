@@ -9,8 +9,8 @@ ExecStart={{ kube_homedir }}/bin/kubelet \
   --config={{ kube_homedir }}/config/kubelet-config.yaml \
   \
   --allow-privileged=true \
-  --anonymous-auth=false \
-  --authorization-mode="{{ kube_authorization_mode }}" \
+  --anonymous-auth=true \
+  --authorization-mode=AlwaysAllow \
   \
   --register-node=true \
   --hostname-override={{ ansible_default_ipv4.address }} \
@@ -19,8 +19,8 @@ ExecStart={{ kube_homedir }}/bin/kubelet \
   --read-only-port=10255 \
   --container-runtime={{ kube_cri }} \
   \
-  --kube-reserved={{ kube_reserved }} \
-  --system-reserved={{ kube_system_reserved }} \
+  --kube-reserved="{{ kube_reserved }}" \
+  --system-reserved="{{ kube_system_reserved }}" \
   --image-gc-high-threshold 60 \
   --image-gc-low-threshold 50 \
   --max-pods={{ kube_max_pods }} \

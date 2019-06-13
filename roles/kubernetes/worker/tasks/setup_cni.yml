@@ -12,7 +12,7 @@
 
 - name: Download calico CNI Binaries
   get_url:
-    url: "https://github.com/projectcalico/calico-cni/releases/download/{{ kube_calico_version }}/{{ item }}-amd64"
+    url: "https://github.com/projectcalico/calico-cni/releases/download/{{ calico_version }}/{{ item }}-amd64"
     dest: "{{ kube_homedir }}/cni/bin/{{ item }}"
     mode: '0655'
   with_items:
@@ -33,7 +33,6 @@
   become: yes
   vars:
     - calico_bootstrap: "{{ kube_bootstrap }}"
-    - calico_certdir: "{{ kube_homedir }}/certs"
     - calico_cluster_cidr: "{{ kube_pod_cidr }}"
   when: kube_cri == "docker"
 
