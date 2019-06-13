@@ -1,0 +1,19 @@
+---
+- name: Prechecking Host
+  hosts: all
+  become: yes
+  gather_facts: no
+  roles:
+    - common
+
+- name: Swarm manager bootstrap
+  hosts: swarms
+  become: yes
+  gather_facts: yes
+  vars:
+    - swarm_enabled: yes
+    - swarm_bootstrap: yes
+    - swarm_managers: "{{ groups['managers'] }}"
+    - swarm_workers: "{{ groups['workers'] }}"
+  roles:
+    - docker

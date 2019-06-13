@@ -1,0 +1,15 @@
+apiVersion: projectcalico.org/v3
+kind: CalicoAPIConfig
+metadata:
+{% if etcd_tls_enabled %}
+spec:
+  datastoreType: etcdv3
+  etcdEndpoints: {{ etcd_endpoints }}
+  etcdCACertFile: "{{ calico_certdir }}/{{ tls_ca }}"
+  etcdCertFile: "{{ calico_certdir }}/calico.pem"
+  etcdKeyFile: "{{ calico_certdir }}/calico-key.pem"
+{% else %}
+spec:
+  datastoreType: etcdv3
+  etcdEndpoints: {{ etcd_endpoints }}
+{% endif %}

@@ -1,0 +1,37 @@
+
+- name: Create Data Encryption Config
+  template:
+    src: "encryption-config.yaml.j2"
+    dest: "{{ kube_homedir }}/config/encryption-config.yaml"
+
+- name: Create systemd unit
+  template:
+    src: "services-{{ kube_version }}/{{ item }}.service.j2"
+    dest: "/etc/systemd/system/{{ item }}.service"
+  with_items:
+  - kube-apiserver
+  - kube-controller-manager
+  - kube-scheduler
+
+- name: Start and enable services
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+    daemon-reload: yes
+  with_items:
+  - kube-apiserver
+  - kube-controller-manager
+  - kube-scheduler
+
+- name: Waiting for kube-apiserver to fully initialiazed
+  wait_for:
+    timeout: 60
+
+- name: Apply RBAC for kubelet authorization
+  args:
+    chdir: "{{ kube_homedir }}/config"
+    stdin: "{{ rbac_kubelet }}"
+  shell: "/usr/local/bin/kubectl --kubeconfig=admin.kubeconfig apply -f - "
+  run_once: yes
+  when: kube_bootstrap

@@ -1,0 +1,50 @@
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+
+[Service]
+ExecStart={{ kube_homedir }}/bin/kube-apiserver \
+  --admission-control={{ kube_admission_plugins | join(',') }} \
+  --advertise-address={{ ansible_default_ipv4.address }} \
+  --apiserver-count={{ kube_apiserver_count }} \
+  --service-cluster-ip-range={{ kube_service_cluster_ip_range }} \
+  --service-node-port-range={{ kube_service_node_port }} \
+  \
+  --bind-address=0.0.0.0 \
+  --insecure-bind-address=0.0.0.0 \
+  --allow-privileged=true \
+  --enable-swagger-ui=true \
+  \
+  --authorization-mode=Node,RBAC \
+  --runtime-config= \
+  \
+  --feature-gates=AdvancedAuditing=false \
+  --audit-log-maxage=30 \
+  --audit-log-maxbackup=3 \
+  --audit-log-maxsize=100 \
+  --audit-log-path=/var/log/kube-audit.log \
+  \
+  --kubelet-certificate-authority={{ kube_homedir }}/certs/ca.pem \
+  --client-ca-file={{ kube_homedir }}/certs/ca.pem \
+  --service-account-key-file={{ kube_homedir }}/certs/service-account.pem \
+  --tls-cert-file={{ kube_homedir }}/certs/kube-apiserver.pem \
+  --tls-private-key-file={{ kube_homedir }}/certs/kube-apiserver-key.pem \
+  \
+  --storage-backend={{ kube_storage_backend }} \
+  --storage-media-type={{ kube_storage_media_type }} \
+  --etcd-servers={{ etcd_endpoints }} \
+  {% if etcd_tls_enabled %}
+  --etcd-cafile={{ kube_homedir }}/certs/ca.pem \
+  --etcd-certfile={{ kube_homedir }}/certs/kube-apiserver.pem \
+  --etcd-keyfile={{ kube_homedir }}/certs/kube-apiserver-key.pem \
+  {% endif %}
+  \
+  --v=2
+
+Restart=on-failure
+RestartSec=5
+LimitNPROC=1000000
+LimitNOFILE=1000000
+
+[Install]
+WantedBy=multi-user.target

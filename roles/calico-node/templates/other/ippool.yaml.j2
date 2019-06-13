@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ipPool
+metadata:
+  cidr: {{ calico_cluster_cidr }}
+spec:
+  ipip:
+    enabled: false
+    mode: always
+  nat-outgoing: true
+  disabled: false

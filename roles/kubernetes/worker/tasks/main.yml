@@ -1,0 +1,46 @@
+---
+# tasks file for kube-worker
+
+- name: Create kubernetes directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{ kube_homedir }}"
+    - "{{ kube_homedir }}/bin"
+    - "{{ kube_homedir }}/certs"
+    - "{{ kube_homedir }}/config"
+    - "{{ kube_homedir }}/cni/net.d"
+    - "{{ kube_homedir }}/cni/bin"
+  tags:
+    - install
+
+- include: install.yml
+  tags:
+    - install-worker
+
+- include: tweaking.yml
+- include: disable_swap.yml
+
+- include: generate_certs.yml
+  tags:
+    - tls
+
+- include: generate_kubeconfig.yml
+  tags:
+    - worker-kubeconfig
+
+- include: setup_cri.yml
+  tags:
+    - setup-cri
+
+- include: setup_cni.yml
+  tags:
+    - setup-cni
+
+- include: setup.yml
+  tags:
+    - setup-kubelet
+
+- include: smoke_test.yml

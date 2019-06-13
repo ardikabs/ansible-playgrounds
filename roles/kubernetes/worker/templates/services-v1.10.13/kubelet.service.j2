@@ -1,0 +1,43 @@
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+ExecStart={{ kube_homedir }}/bin/kubelet \
+  --config={{ kube_homedir }}/config/kubelet-config.yaml \
+  \
+  --allow-privileged=true \
+  --anonymous-auth=false \
+  --authorization-mode=Webhook \
+  \
+  --register-node=true \
+  --hostname-override={{ ansible_default_ipv4.address }} \
+  --node-labels={{ kube_node_labels | join(',') }} \
+  --register-schedulable=false \
+  --read-only-port=10255 \
+  --container-runtime={{ kube_cri }} \
+  \
+  --kube-reserved="{{ kube_reserved }}" \
+  --system-reserved="{{ kube_system_reserved }}" \
+  --image-gc-high-threshold 60 \
+  --image-gc-low-threshold 50 \
+  --max-pods={{ kube_max_pods }} \
+  \
+  --network-plugin=cni \
+  --cni-bin-dir={{ kube_homedir }}/cni/bin \
+  --cni-conf-dir={{ kube_homedir }}/cni/net.d \
+  \
+  --kubeconfig={{ kube_homedir }}/config/kubelet.kubeconfig \
+  --root-dir={{ kube_homedir }} \
+  --experimental-allowed-unsafe-sysctls 'net.core.somaxconn'\
+  --v=2
+
+Restart=always
+RestartSec=10
+LimitNPROC={{ kube_nproc }}
+LimitNOFILE={{ kube_nofile }}
+
+[Install]
+WantedBy=multi-user.target

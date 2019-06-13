@@ -1,0 +1,28 @@
+[Unit]
+Description=etcd
+Documentation=https://github.com/coreos
+[Service]
+ExecStart=/usr/local/bin/etcd --name {{ ansible_default_ipv4.address }} \
+  --initial-cluster-token {{ etcd_cluster_token }} \
+  --initial-advertise-peer-urls http{% if etcd_tls_enabled %}s{% endif %}://{{ ansible_default_ipv4.address }}:2380 \
+  --listen-peer-urls http{% if etcd_tls_enabled %}s{% endif %}://{{ ansible_default_ipv4.address }}:2380 \
+  --listen-client-urls http{% if etcd_tls_enabled %}s{% endif %}://{{ ansible_default_ipv4.address }}:2379,http{% if etcd_tls_enabled %}s{% endif %}://127.0.0.1:2379 \
+  --advertise-client-urls http{% if etcd_tls_enabled %}s{% endif %}://{{ ansible_default_ipv4.address }}:2379 \
+  {% if etcd_tls_enabled %}
+  --trusted-ca-file={{ etcd_basedir }}/certs/{{ tls_ca }} \
+  --cert-file={{ etcd_basedir }}/certs/{{ tls_cert }} \
+  --key-file={{ etcd_basedir }}/certs/{{ tls_key }} \
+  --client-cert-auth \
+  --peer-trusted-ca-file={{ etcd_basedir }}/certs/{{ tls_ca }} \
+  --peer-cert-file={{ etcd_basedir }}/certs/{{ tls_cert }} \
+  --peer-key-file={{ etcd_basedir }}/certs/{{ tls_key }} \
+  --peer-client-cert-auth \
+  {% endif %}
+  --initial-cluster "{% for host in groups['etcd'] %}{{ hostvars[host].ansible_default_ipv4.address }}=http{% if etcd_tls_enabled %}s{% endif %}://{{ hostvars[host].ansible_default_ipv4.address }}:2380{% if not loop.last %},{% endif %}{% endfor %}" \
+  --initial-cluster-state {{ etcd_cluster_state }} \
+  --data-dir={{ etcd_datadir }}
+
+Restart=on-failure
+RestartSec=5
+[Install]
+WantedBy=multi-user.target

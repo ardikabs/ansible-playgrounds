@@ -1,0 +1,25 @@
+- name: Copying Certificate Authority
+  copy:
+    src: "{{ item }}"
+    dest: "{{ calico_basedir }}/certs/"
+  with_items:
+  - "{{tls_ca}}"
+  - "{{tls_ca_key}}"
+  - "{{tls_ca_config}}"
+
+- name: Generate CSR
+  template:
+    src: "calico-csr.json.j2"
+    dest: "{{ calico_certdir }}/calico-csr.json"
+
+- name: Generating calico certificates
+  args:
+    chdir: "{{ calico_certdir }}"
+    creates: "{{ calico_certdir }}/calico.pem"
+  shell: |
+   /usr/bin/cfssl gencert  \
+   -ca={{tls_ca}} \
+   -ca-key={{tls_ca_key}} \
+   -config={{tls_ca_config}} \
+   -profile=kubernetes \
+   calico-csr.json | /usr/bin/cfssljson -bare calico

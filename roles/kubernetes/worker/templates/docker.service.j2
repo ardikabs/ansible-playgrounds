@@ -1,0 +1,28 @@
+[Unit]
+Description=Docker Application Container Engine
+Documentation=https://docs.docker.com
+After=network-online.target firewalld.service
+Wants=network-online.target
+Requires=docker.socket
+
+[Service]
+Type=notify
+EnvironmentFile=-/etc/default/docker
+ExecStart=/usr/bin/dockerd \
+  --host=fd:// \
+  --iptables=false \
+  --ip-masq=false \
+  --log-level=warn \
+  --log-driver=json-file \
+  --log-opt=max-size=10m \
+  --log-opt=max-file=5
+
+LimitNOFILE={{ docker_nofile }}
+LimitNPROC={{ docker_nproc }}
+MountFlags=slave
+LimitCORE=infinity
+TimeoutStartSec=0
+Delegate=yes
+
+[Install]
+WantedBy=multi-user.target

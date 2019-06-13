@@ -1,0 +1,27 @@
+---
+# tasks file for kube-etcd
+
+- name: Create etcd directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{ calico_basedir }}"
+    - "{{ calico_basedir }}/certs"
+    - "{{ calico_basedir }}/conf"
+  tags:
+    - install
+
+- include: install.yml
+  tags:
+    - install
+
+- include: generate_certs.yml
+  when: calico_tls_enabled and etcd_tls_enabled
+  tags:
+    - tls
+
+- include: setup.yml
+  tags:
+    - setup

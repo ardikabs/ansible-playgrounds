@@ -1,0 +1,21 @@
+
+- name: Install Nginx
+  include_role:
+    name: nginx
+
+- name: Create kubernetes health check path
+  template:
+    src: kubernetes-healthz-nginx.conf.j2
+    dest: "/etc/nginx/sites-available/kubernetes.conf"
+
+- name: Enable kubernetes health check
+  file:
+    src: "/etc/nginx/sites-available/kubernetes.conf"
+    dest: "/etc/nginx/sites-enabled/kubernetes.default.svc.cluster.local"
+    state: link
+
+- name: Restart nginx
+  systemd:
+    name: nginx
+    state: restarted
+    enabled: yes

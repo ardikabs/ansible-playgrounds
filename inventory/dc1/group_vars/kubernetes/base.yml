@@ -1,0 +1,32 @@
+
+csr:
+  C: ID
+  L: Jakarta
+  O: Kubernetes
+  OU: Kubernetes Cluster 01
+  ST: Jakarta Selatan
+
+tls_ca: ca.pem
+tls_ca_key: ca-key.pem
+tls_ca_config: ca-config.json
+
+kube_version: "v1.12.0"
+kube_homedir: "/home/kubernetes"
+
+kube_apiserver_count: "{{ groups['masters']|length }}"
+kube_apiserver_external_address: apiserver.production.local
+
+kube_service_cluster_ip_range: 10.32.0.0/24
+kube_service_node_port: 30000-32767
+kube_pod_cidr: 10.200.0.0/16
+
+kube_admission_plugins:
+  - NamespaceLifecycle
+  - NodeRestriction
+  - LimitRanger
+  - ServiceAccount
+  - DefaultStorageClass
+  - ResourceQuota
+
+etcd_tls_enabled: true
+etcd_endpoints: "{% for etcd in groups['etcd'] %}http{% if etcd_tls_enabled %}s{% endif %}://{{ hostvars[etcd].ansible_default_ipv4.address }}:2379{% if not loop.last %},{% endif %}{% endfor %}"

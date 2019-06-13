@@ -1,0 +1,4 @@
+
+kube_encryption_secret: "EToIrgBRKW8RJYO1AJC854U/1wpctz5X+Ng5WIY982A="
+kube_storage_backend: etcd2
+kube_storage_media_type: application/json

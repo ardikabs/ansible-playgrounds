@@ -1,0 +1,10 @@
+---
+apiVersion: projectcalico.org/v3
+kind: IPPool
+metadata:
+  name: ippool-{{ calico_ippool_name }}
+spec:
+  cidr: {{ calico_cluster_cidr }}
+  ipipMode: {{ calico_ipip_mode }}
+  natOutgoing: true
+  disabled: false

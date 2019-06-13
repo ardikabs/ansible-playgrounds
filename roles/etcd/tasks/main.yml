@@ -1,0 +1,30 @@
+---
+# tasks file for kube-etcd
+
+- name: Create etcd directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{ etcd_basedir }}"
+    - "{{ etcd_basedir }}/certs"
+    - "{{ etcd_datadir }}"
+  tags:
+    - install
+
+- include: install.yml
+  tags:
+    - install
+
+- include: generate_certs.yml
+  when: etcd_tls_enabled
+  tags:
+    - tls
+
+- include: setup.yml
+  tags:
+    - setup
+
+- include: smoke_test.yml
+  when: not etcd_proxy

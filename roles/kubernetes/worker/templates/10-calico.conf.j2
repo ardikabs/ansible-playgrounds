@@ -1,0 +1,16 @@
+{
+    "name": "calico-k8s-network",
+    "type": "calico",
+    "log_level": "info",
+    "ipam": {
+        "type": "calico-ipam"
+    },
+    "kubernetes": {
+        "kubeconfig": "{{ kube_homedir }}/config/kubelet.kubeconfig"
+    },
+    "etcd_endpoints": "{{ etcd_endpoints }}"{% if etcd_tls_enabled %},
+    "etcd_ca_cert_file": "{{ kube_homedir }}/certs/{{ tls_ca }}",
+    "etcd_cert_file": "{{ kube_homedir }}/certs/kubelet.pem",
+    "etcd_key_file": "{{ kube_homedir }}/certs/kubelet-key.pem"
+    {% endif %}
+}

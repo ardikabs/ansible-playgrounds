@@ -1,0 +1,37 @@
+---
+# tasks file for kube-master
+
+- name: Create kubernetes directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{ kube_homedir }}"
+    - "{{ kube_homedir }}/certs"
+    - "{{ kube_homedir }}/config"
+    - "{{ kube_homedir }}/bin"
+  tags:
+    - install
+
+- include: install.yml
+  tags:
+    - install
+
+- include: generate_certs.yml
+  tags:
+    - tls
+
+- include: generate_kubeconfig.yml
+  tags:
+    - master-kubeconfig
+
+- include: setup.yml
+  tags:
+    - setup-master
+
+- include: proxy.yml
+  tags:
+    - setup-proxy
+
+- include: smoke_test.yml

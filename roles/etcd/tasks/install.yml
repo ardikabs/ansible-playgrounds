@@ -1,0 +1,14 @@
+---
+- name: Download cfssl & cfssljson
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+    mode: '0655'
+  with_items:
+  - { url: "https://pkg.cfssl.org/R1.2/cfssl_linux-amd64",     dest: "/usr/bin/cfssl"}
+  - { url: "https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64", dest: "/usr/bin/cfssljson" }
+
+- name: Download etcd {{ etcd_version }} package
+  get_url:
+    url: "https://github.com/coreos/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-amd64.tar.gz"
+    dest: /tmp/etcd.tar.gz

@@ -1,0 +1,44 @@
+- name: Download CNI Binaries
+  get_url:
+    url: "  https://github.com/containernetworking/plugins/releases/download/{{ kube_cni_version }}/cni-plugins-amd64-{{ kube_cni_version }}.tgz"
+    dest: "{{ kube_homedir }}/cni/cni-plugins.tgz"
+
+- name: Extract CNI Binaries
+  unarchive:
+    remote_src: yes
+    src: "{{ kube_homedir }}/cni/cni-plugins.tgz"
+    dest: "{{ kube_homedir }}/cni/bin/"
+    extra_opts: [--strip-components=1]
+
+- name: Download calico CNI Binaries
+  get_url:
+    url: "https://github.com/projectcalico/calico-cni/releases/download/{{ calico_version }}/{{ item }}-amd64"
+    dest: "{{ kube_homedir }}/cni/bin/{{ item }}"
+    mode: '0655'
+  with_items:
+  - calico
+  - calico-ipam
+
+- name: Create calico network plugin configuration
+  template:
+    src: "10-calico.conf.j2"
+    dest: "{{ kube_homedir }}/cni/net.d/"
+    mode: '0644'
+    owner: root
+    backup: yes
+
+- name: Install calico node
+  include_role:
+    name: calico-node
+  become: yes
+  vars:
+    - calico_bootstrap: "{{ kube_bootstrap }}"
+    - calico_cluster_cidr: "{{ kube_pod_cidr }}"
+  when: kube_cri == "docker"
+
+- name: Remove unnecessary package
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+  - "{{ kube_homedir }}/cni/cni-plugins.tgz"
