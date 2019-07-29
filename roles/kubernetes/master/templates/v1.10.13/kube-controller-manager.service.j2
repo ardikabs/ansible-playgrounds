@@ -18,6 +18,7 @@ ExecStart={{ kube_homedir }}/bin/kube-controller-manager \
   --root-ca-file={{ kube_homedir }}/certs/ca.pem \
   --service-account-private-key-file={{ kube_homedir }}/certs/service-account-key.pem \
   \
+  --use-service-account-credentials=true \
   --horizontal-pod-autoscaler-use-rest-clients=false \
   --v=2
 

@@ -7,6 +7,7 @@ ExecStart={{ kube_homedir }}/bin/kube-apiserver \
   --advertise-address={{ ansible_default_ipv4.address }} \
   --bind-address=0.0.0.0 \
   --allow-privileged=true \
+  --anonymous-auth=true \
   --apiserver-count={{ kube_apiserver_count }} \
   --audit-log-maxage=30 \
   --audit-log-maxbackup=3 \
@@ -38,6 +39,7 @@ ExecStart={{ kube_homedir }}/bin/kube-apiserver \
   --etcd-certfile={{ kube_homedir }}/certs/kube-apiserver.pem \
   --etcd-keyfile={{ kube_homedir }}/certs/kube-apiserver-key.pem \
   {% endif %}
+  --insecure-port=0 \
   --v=2
 
 Restart=on-failure

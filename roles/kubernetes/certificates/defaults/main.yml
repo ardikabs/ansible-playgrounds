@@ -1,8 +1,0 @@
----
-# defaults file for certificates
-
-TLS_C: ID
-TLS_L: Jakarta
-TLS_O: Kubernetes
-TLS_OU: Kubernetes Cluster 01
-TLS_ST: Jakarta Selatan
