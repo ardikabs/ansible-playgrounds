@@ -1,13 +1,15 @@
 
 - name: Create kubelet configuration
   template:
-    src: kubelet-config.yaml.j2
+    src: "{{ kube_version }}/kubelet-config.yaml.j2"
     dest: "{{ kube_homedir }}/config/kubelet-config.yaml"
+  ignore_errors: yes
 
 - name: Create kube-proxy configuration
   template:
-    src: kube-proxy-config.yaml.j2
+    src: "{{ kube_version }}/kube-proxy-config.yaml.j2"
     dest: "{{ kube_homedir }}/config/kube-proxy-config.yaml"
+  ignore_errors: yes
 
 - name: Create calico cni configuration
   template:
@@ -16,7 +18,7 @@
 
 - name: Create systemd unit
   template:
-    src: "services-{{ kube_version }}/{{ item }}.service.j2"
+    src: "{{ kube_version }}/{{ item }}.service.j2"
     dest: "/etc/systemd/system/{{ item }}.service"
   with_items:
   - kubelet

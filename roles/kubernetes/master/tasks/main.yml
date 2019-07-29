@@ -25,7 +25,7 @@
 - include: generate_kubeconfig.yml
   tags:
     - master-kubeconfig
-
+- include: disable_swap.yml
 - include: setup.yml
   tags:
     - setup-master

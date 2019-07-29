@@ -1,0 +1,33 @@
+- name: Check record in DNS Server
+  shell: dig {{ type | default('A') }} {{ record }}.{{ internal_dns_zone }} @{{ ansible_host }} +short
+  register: fqdn_status
+
+- name: Add/Update record to DNS server
+  nsupdate:
+    server: "{{ ansible_host }}"
+    key_name: "{{ key_name }}"
+    key_secret: "{{ key_secret }}"
+    zone: "{{ dns_zone }}"
+    record: "{{ record }}"
+    value: "{{ value }}"
+    ttl: "{{ ttl | default('300') }}"
+    type: "{{ type | default('A') }}"
+    state: "{{ state | default('present') }}"
+  register: update_status
+  when: fqdn_status == '' or force_change is defined
+  tags:
+    - add_dns_record
+
+# BIND9.x < BIND9.9
+- name: Sync DNS record
+  shell: |
+    rndc freeze {{ dns_zone }}; \
+    rndc thaw {{ dns_zone }};
+  tags:
+    - sync_dns_record
+
+# BIND 9.9+
+# - name: Sync DNS record (>BIND9.9)
+#   shell: rndc sync -clean
+#   tags:
+#     - sync_dns_record

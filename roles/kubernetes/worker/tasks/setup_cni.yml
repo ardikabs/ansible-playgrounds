@@ -19,14 +19,6 @@
   - calico
   - calico-ipam
 
-- name: Create calico network plugin configuration
-  template:
-    src: "10-calico.conf.j2"
-    dest: "{{ kube_homedir }}/cni/net.d/"
-    mode: '0644'
-    owner: root
-    backup: yes
-
 - name: Install calico node
   include_role:
     name: calico-node
