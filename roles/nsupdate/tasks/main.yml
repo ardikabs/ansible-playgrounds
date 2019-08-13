@@ -1,5 +1,5 @@
 - name: Check record in DNS Server
-  shell: dig {{ type | default('A') }} {{ record }}.{{ internal_dns_zone }} @{{ ansible_host }} +short
+  shell: dig {{ type | default('A') }} {{ record }}.{{ dns_zone }} @{{ ansible_host }} +short
   register: fqdn_status
 
 - name: Add/Update record to DNS server
