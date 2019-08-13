@@ -1,7 +1,15 @@
 [Unit]
 Description=Kubernetes Controller Manager
 Documentation=https://github.com/kubernetes/kubernetes
+
 [Service]
+Type=notify
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=0
+LimitNPROC={{ kube_nproc }}
+LimitNOFILE={{ kube_nofile }}
+
 ExecStart={{ kube_homedir }}/bin/kube-controller-manager \
   --kubeconfig={{ kube_homedir }}/config/kube-controller-manager.kubeconfig \
   --leader-elect=true \
@@ -17,11 +25,6 @@ ExecStart={{ kube_homedir }}/bin/kube-controller-manager \
   --service-account-private-key-file={{ kube_homedir }}/certs/service-account-key.pem \
   --use-service-account-credentials=true \
   --v=2
-
-Restart=on-failure
-RestartSec=5
-LimitNPROC={{ kube_nproc }}
-LimitNOFILE={{ kube_nofile }}
 
 [Install]
 WantedBy=multi-user.target

@@ -3,6 +3,13 @@ Description=Kubernetes Controller Manager
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
+Type=notify
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=0
+LimitNPROC={{ kube_nproc }}
+LimitNOFILE={{ kube_nofile }}
+
 ExecStart={{ kube_homedir }}/bin/kube-controller-manager \
   --kubeconfig={{ kube_homedir }}/config/kube-controller-manager.kubeconfig \
   --leader-elect=true \
@@ -21,11 +28,6 @@ ExecStart={{ kube_homedir }}/bin/kube-controller-manager \
   --use-service-account-credentials=true \
   --horizontal-pod-autoscaler-use-rest-clients=false \
   --v=2
-
-Restart=on-failure
-RestartSec=5
-LimitNPROC=1000000
-LimitNOFILE=1000000
 
 [Install]
 WantedBy=multi-user.target

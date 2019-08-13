@@ -3,6 +3,13 @@ Description=Kubernetes API Server
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
+Type=notify
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=0
+LimitNPROC={{ kube_nproc }}
+LimitNOFILE={{ kube_nofile }}
+
 ExecStart={{ kube_homedir }}/bin/kube-apiserver \
   --admission-control={{ kube_admission_plugins | join(',') }} \
   --advertise-address={{ ansible_default_ipv4.address }} \
@@ -40,11 +47,6 @@ ExecStart={{ kube_homedir }}/bin/kube-apiserver \
   {% endif %}
   \
   --v=2
-
-Restart=on-failure
-RestartSec=5
-LimitNPROC=1000000
-LimitNOFILE=1000000
 
 [Install]
 WantedBy=multi-user.target

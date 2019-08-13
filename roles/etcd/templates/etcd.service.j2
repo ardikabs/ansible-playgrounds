@@ -1,7 +1,14 @@
 [Unit]
 Description=etcd
 Documentation=https://github.com/coreos
+
 [Service]
+Type=notify
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=40000
+TimeoutStartSec=0
+
 ExecStart=/usr/local/bin/etcd --name {{ ansible_default_ipv4.address }} \
   --initial-cluster-token {{ etcd_cluster_token }} \
   --initial-advertise-peer-urls http{% if etcd_tls_enabled %}s{% endif %}://{{ ansible_default_ipv4.address }}:2380 \
@@ -22,7 +29,5 @@ ExecStart=/usr/local/bin/etcd --name {{ ansible_default_ipv4.address }} \
   --initial-cluster-state {{ etcd_cluster_state }} \
   --data-dir={{ etcd_datadir }}
 
-Restart=on-failure
-RestartSec=5
 [Install]
 WantedBy=multi-user.target
