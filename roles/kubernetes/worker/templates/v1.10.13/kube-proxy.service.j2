@@ -3,6 +3,10 @@ Description=Kubernetes Kube Proxy
 Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
+Type=notify
+Restart=always
+RestartSec=10
+
 ExecStart={{ kube_homedir }}/bin/kube-proxy \
   --cluster-cidr={{ kube_pod_cidr }} \
   --masquerade-all=false \
@@ -10,9 +14,6 @@ ExecStart={{ kube_homedir }}/bin/kube-proxy \
   --conntrack-min=1000000 \
   --proxy-mode={{ kube_proxy_mode }} \
   --v=2
-
-Restart=always
-RestartSec=10
 
 [Install]
 WantedBy=multi-user.target

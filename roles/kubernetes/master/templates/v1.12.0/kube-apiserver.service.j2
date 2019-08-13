@@ -3,6 +3,13 @@ Description=kube-apiserver API Server
 Documentation=https://github.com/kube-apiserver/kube-apiserver
 
 [Service]
+Type=notify
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=0
+LimitNPROC={{ kube_nproc }}
+LimitNOFILE={{ kube_nofile }}
+
 ExecStart={{ kube_homedir }}/bin/kube-apiserver \
   --advertise-address={{ ansible_default_ipv4.address }} \
   --bind-address=0.0.0.0 \
@@ -41,11 +48,6 @@ ExecStart={{ kube_homedir }}/bin/kube-apiserver \
   {% endif %}
   --insecure-port=0 \
   --v=2
-
-Restart=on-failure
-RestartSec=5
-LimitNPROC={{ kube_nproc }}
-LimitNOFILE={{ kube_nofile }}
 
 [Install]
 WantedBy=multi-user.target
