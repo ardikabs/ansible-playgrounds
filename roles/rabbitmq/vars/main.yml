@@ -1,0 +1,15 @@
+---
+rabbitmq_peer_discovery_backend: rabbit_peer_discovery_classic_config
+
+rabbitmq_cluster_plugins:
+  - rabbitmq_management
+  - rabbitmq_management_agent
+
+rabbitmq_default_users:
+  - guest
+
+rabbitmq_ports:
+  - 4369/tcp
+  - 15672/tcp
+  - 25672/tcp
+  - 5672/tcp

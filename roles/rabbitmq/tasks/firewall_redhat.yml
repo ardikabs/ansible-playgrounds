@@ -1,0 +1,10 @@
+---
+- name: Open port for RabbitMQ service
+  firewalld:
+    port: "{{ item }}"
+    state: enabled
+    permanent: yes
+  with_items: "{{ rabbitmq_ports }}"
+
+- name: Reload firewalld
+  command: firewall-cmd --reload

@@ -1,0 +1,10 @@
+cluster_formation.peer_discovery_backend = {{ rabbitmq_peer_discovery_backend }}
+{% for host in play_hosts %}
+cluster_formation.classic_config.nodes.{{loop.index}} = rabbit@{{hostvars[host]['ansible_hostname']}}
+{% endfor %}
+
+# Flow Control is triggered if memory usage above 60%.
+vm_memory_high_watermark.relative = 0.6
+
+# Flow Control is triggered if free disk size below 5GB.
+disk_free_limit.absolute = 5GB

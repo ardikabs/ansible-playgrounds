@@ -1,0 +1,10 @@
+---
+- include: install_redhat.yml
+  when: ansible_os_family == "RedHat"
+
+- include: firewall_redhat.yml
+  when: ansible_os_family == "RedHat"
+
+- include: configure.yml
+- include: cluster.yml
+- include: settings.yml

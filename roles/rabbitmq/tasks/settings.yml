@@ -1,0 +1,50 @@
+---
+- name: Setup RabbitMQ cluster name
+  command: "/sbin/rabbitmqctl set_cluster_name {{ cluster_name }}"
+  run_once: yes
+
+- name: Enables RabbitMQ plugins
+  rabbitmq_plugin:
+    names: "{{ item }}"
+    state: enabled
+    new_only: yes
+  with_items: "{{ rabbitmq_cluster_plugins }}"
+
+- name: Ensure RabbitMQ default users removed
+  rabbitmq_user:
+    user: "{{ item }}"
+    state: absent
+  run_once: yes
+  ignore_errors: yes
+  delegate_to: "{{ play_hosts | first }}" # Settings should be applied on any single node in the cluster
+  with_items: "{{ rabbitmq_default_users }}"
+
+- name: Register selected RabbitMQ users
+  rabbitmq_user:
+    user: "{{ item.user }}"
+    password: "{{ item.password }}"
+    configure_priv: "{{ item.permissions_configure | default('.*') }}"
+    read_priv: "{{ item.permissions_read | default('.*') }}"
+    write_priv: "{{ item.permissions_write | default('.*') }}"
+    vhost: "{{ item.vhost | default('/') }}"
+    permissions: "{{ item.permissions | default(omit) }}"
+    tags: "{{ item.tags | default('') }}"
+  no_log: yes
+  run_once: yes
+  ignore_errors: yes
+  delegate_to: "{{ play_hosts | first }}" # Settings should be applied on any single node in the cluster
+  with_items: "{{ rabbitmq_cluster_users }}"
+
+- name: Register selected RabbitMQ policies
+  rabbitmq_policy:
+    name: "{{ item.name }}"
+    node: "{{ item.node | default('rabbit') }}"
+    apply_to: "{{ item.apply_to | default('all') }}"
+    state: "{{ item.state | default('present') }}"
+    vhost: "{{ item.vhost | default('/') }}"
+    pattern: "{{ item.pattern }}"
+    tags: "{{ item.tags }}"
+  with_items: "{{ rabbitmq_cluster_policies }}"
+  delegate_to: "{{ play_hosts | first }}" # Settings should be applied on any single node in the cluster
+  run_once: yes
+  when: rabbitmq_cluster_policies is defined
