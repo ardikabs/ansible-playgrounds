@@ -1,6 +1,6 @@
 - name: Download CNI Binaries
   get_url:
-    url: "  https://github.com/containernetworking/plugins/releases/download/{{ kube_cni_version }}/cni-plugins-amd64-{{ kube_cni_version }}.tgz"
+    url: "https://github.com/containernetworking/plugins/releases/download/{{ kube_cni_version }}/cni-plugins-amd64-{{ kube_cni_version }}.tgz"
     dest: "{{ kube_homedir }}/cni/cni-plugins.tgz"
 
 - name: Extract CNI Binaries
