@@ -1,0 +1,32 @@
+---
+- name: Copy RabbitMQ Configuration file
+  template:
+    src: rabbitmq.conf.j2
+    dest: /etc/rabbitmq/rabbitmq.conf
+    owner: rabbitmq
+    group: rabbitmq
+    mode: 0644
+    backup: yes
+
+- name: Copy Erlang Cookie
+  template:
+    src: erlang.cookie.j2
+    dest: /var/lib/rabbitmq/.erlang.cookie
+    owner: rabbitmq
+    group: rabbitmq
+    mode: 0600
+    backup: yes
+
+- name: Ensure Mnesia base is configured
+  file:
+    path: "{{ rabbitmq_cluster_mnesia_base }}"
+    state: directory
+    owner: rabbitmq
+    group: rabbitmq
+    mode: 0755
+  register: mnesia_base
+
+- name: Set cluster form mode if mnesia not changed (bootstrap mode)
+  when: mnesia_base.changed
+  set_fact:
+    rabbitmq_cluster_former: 1

@@ -1,0 +1,26 @@
+---
+- name: Stop RabbitMQ service before forming RabbitMQ cluster
+  systemd:
+    name: rabbitmq-server
+    state: stopped
+  when: rabbitmq_cluster_former is defined
+
+- name: Ensure node state is cleared to forming RabbitMQ cluster
+  file:
+    path: "{{ rabbitmq_cluster_mnesia_base }}"
+    state: absent
+  when: rabbitmq_cluster_former is defined
+
+- name: Ensure first RabbitMQ node to forming the cluster
+  service:
+    name: rabbitmq-server
+    state: started
+    enabled: yes
+  when: inventory_hostname == (play_hosts | first)
+
+- name: Let the others RabbitMQ nodes join the cluster
+  service:
+    name: rabbitmq-server
+    state: started
+    enabled: yes
+  when: inventory_hostname != (play_hosts | first)
