@@ -5,12 +5,6 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-Type=notify
-Restart=always
-RestartSec=10
-LimitNPROC={{ kube_nproc }}
-LimitNOFILE={{ kube_nofile }}
-
 ExecStart={{ kube_homedir }}/bin/kubelet \
   --hostname-override={{ ansible_default_ipv4.address }} \
   --config={{ kube_homedir }}/config/kubelet-config.yaml \
@@ -27,6 +21,11 @@ ExecStart={{ kube_homedir }}/bin/kubelet \
   --kube-reserved={{ kube_reserved }} \
   --system-reserved={{ kube_system_reserved }} \
   --v=2
+Restart=always
+RestartSec=10
+LimitNPROC={{ kube_nproc }}
+LimitNOFILE={{ kube_nofile }}
+
 
 [Install]
 WantedBy=multi-user.target
