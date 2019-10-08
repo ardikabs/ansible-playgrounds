@@ -1,6 +1,13 @@
-- name: Download CNI Binaries
+# CNI >= v0.8.0
+# - name: "Download CNI v{{ kube_cni_version }} Binaries"
+#   get_url:
+#     url: "https://github.com/containernetworking/plugins/releases/download/v{{ kube_cni_version }}/cni-plugins-linux-amd64-v{{ kube_cni_version }}.tgz"
+#     dest: "{{ kube_homedir }}/cni/cni-plugins.tgz"
+
+CNI < v0.8.0
+- name: "Download CNI v{{ kube_cni_version }} Binaries"
   get_url:
-    url: "https://github.com/containernetworking/plugins/releases/download/{{ kube_cni_version }}/cni-plugins-amd64-{{ kube_cni_version }}.tgz"
+    url: "https://github.com/containernetworking/plugins/releases/download/v{{ kube_cni_version }}/cni-plugins-amd64-v{{ kube_cni_version }}.tgz"
     dest: "{{ kube_homedir }}/cni/cni-plugins.tgz"
 
 - name: Extract CNI Binaries
@@ -12,7 +19,7 @@
 
 - name: Download calico CNI Binaries
   get_url:
-    url: "https://github.com/projectcalico/calico-cni/releases/download/{{ calico_version }}/{{ item }}-amd64"
+    url: "https://github.com/projectcalico/calico-cni/releases/download/v{{ calico_version }}/{{ item }}-amd64"
     dest: "{{ kube_homedir }}/cni/bin/{{ item }}"
     mode: '0655'
   with_items:

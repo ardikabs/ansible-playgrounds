@@ -17,7 +17,7 @@ disable_swap: true
 
 # ---- Specification ----
 kube_bootstrap: false
-kube_version: "v1.12.0"
+kube_version: "1.12.0"
 kube_homedir: "/home/kubernetes"
 kube_cri: docker
 kube_max_pods: 40
@@ -40,11 +40,11 @@ kube_cluster_dns: "10.32.0.10"
 kube_cluster_cidr: 10.200.0.0/16
 kube_pod_cidr: 10.200.0.0/16
 kube_network_plugin: cni
-kube_cni_version: v0.6.0
+kube_cni_version: 0.6.0
 
 # ---- Calico CNI Configuration ----
 calico_ippool_name: "{{ kube_apiserver_external_address }}"
-calico_version: v3.5.5
+calico_version: 3.5.5
 calico_peer_ip: "{{ ansible_default_ipv4.address }}"
 calico_asn: 64567
 
