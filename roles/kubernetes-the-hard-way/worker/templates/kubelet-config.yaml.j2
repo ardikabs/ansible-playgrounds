@@ -13,7 +13,7 @@ clusterDomain: "{{ kube_cluster_domain }}"
 clusterDNS:
   - "{{ kube_cluster_dns }}"
 maxPods: {{ kube_max_pods }}
-podCIDR: "{{ kube_cluster_cidr }}"
+podCIDR: "{{ kube_pod_cidr }}"
 resolvConf: "/run/systemd/resolve/resolv.conf"
 runtimeRequestTimeout: "15m"
 tlsCertFile: "{{ kube_homedir }}/certs/kubelet.pem"

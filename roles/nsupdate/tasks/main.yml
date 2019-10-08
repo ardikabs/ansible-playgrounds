@@ -18,16 +18,8 @@
   tags:
     - add_dns_record
 
-# BIND9.x < BIND9.9
 - name: Sync DNS record
   shell: |
-    rndc freeze {{ dns_zone }}; \
-    rndc thaw {{ dns_zone }};
+    rndc sync -clear
   tags:
     - sync_dns_record
-
-# BIND 9.9+
-# - name: Sync DNS record (>BIND9.9)
-#   shell: rndc sync -clean
-#   tags:
-#     - sync_dns_record

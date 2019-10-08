@@ -1,7 +1,8 @@
----
 # defaults file for kube-worker
 
-# ---- Miscellaneous ----
+# ------------------------
+# Certificates Definition
+# ------------------------
 csr:
   C: ID
   L: Jakarta
@@ -13,42 +14,40 @@ tls_ca: ca.pem
 tls_ca_key: ca-key.pem
 tls_ca_config: ca-config.json
 
-disable_swap: true
+# ------------------------
+# Miscellaneous
+# ------------------------
 
-# ---- Specification ----
+disable_swap: True
+conntrack_size: 100000
+
+# ------------------------
+# Kubernetes Definition
+# ------------------------
+
 kube_bootstrap: false
-kube_version: "v1.12.0"
+kube_version: "v1.15.0"
 kube_homedir: "/home/kubernetes"
 kube_cri: docker
 kube_max_pods: 40
 
 kube_apiserver_external_address: "apiserver.production.local"
 kube_node_labels:
-  - nodename={{ ansible_hostname }}
   - node-role.kubernetes.io/worker=true
 kube_reserved: "cpu=200m,memory=500Mi"
 kube_system_reserved: "cpu=200m,memory=500Mi"
 
-kube_nproc: 1000000
-kube_nofile: 1000000
-
-
-# ---- Network Configuration ----
 kube_proxy_mode: iptables
 kube_cluster_domain: "cluster.local"
 kube_cluster_dns: "10.32.0.10"
-kube_cluster_cidr: 10.200.0.0/16
-kube_pod_cidr: 10.200.0.0/16
+kube_cluster_cidr: 10.200.0.0/16 # Kubernetes Cluster CIDR -> for Cluster scope
+kube_pod_cidr: 10.200.0.0/24 # Kubernetes Pod CIDR -> for Kubelet scope
 kube_network_plugin: cni
 kube_cni_version: v0.6.0
 
-# ---- Calico CNI Configuration ----
-calico_ippool_name: "{{ kube_apiserver_external_address }}"
-calico_version: v3.5.5
-calico_peer_ip: "{{ ansible_default_ipv4.address }}"
-calico_asn: 64567
 
-# ---- Runtime Configuration ----
+# ------------------------
+# CRI Definition
+# ------------------------
+
 docker_version: 18.06.0~ce~3-0~ubuntu
-docker_nofile: 1048576
-docker_nproc: 1048576

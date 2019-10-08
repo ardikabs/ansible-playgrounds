@@ -16,7 +16,7 @@ ExecStart={{ kube_homedir }}/bin/kube-controller-manager \
   --cluster-name=kubernetes \
   --address=0.0.0.0 \
   --allocate-node-cidrs=false \
-  --cluster-cidr={{ kube_pod_cidr }} \
+  --cluster-cidr={{ kube_cluster_cidr }} \
   --service-cluster-ip-range={{ kube_service_cluster_ip_range }} \
   \
   --cluster-signing-cert-file={{ kube_homedir }}/certs/ca.pem \

@@ -1,0 +1,13 @@
+[Unit]
+Description=Kubernetes Kube Proxy
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+ExecStart=/usr/local/bin/kube-proxy \
+  --config={{ kube_homedir }}/kube-proxy/kube-proxy-config.yaml \
+  --v=2
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,32 @@
+
+- name: Create CNI directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - /etc/cni
+    - /etc/cni/net.d
+    - /opt/cni/bin
+  tags:
+    - install
+
+- name: Download CNI Binaries
+  get_url:
+    url: "https://github.com/containernetworking/plugins/releases/download/{{ kube_cni_version }}/cni-plugins-amd64-{{ kube_cni_version }}.tgz"
+    dest: "/tmp/cni-plugins.tgz"
+
+- name: Extract CNI Binaries
+  unarchive:
+    remote_src: yes
+    src: "/tmp/cni-plugins.tgz"
+    dest: "/opt/cni/bin/"
+    extra_opts: [--strip-components=1]
+
+- name: Generate CNI Configuration
+  template:
+    src: "cni/{{ item }}.conf.j2"
+    dest: "/etc/cni/net.d/{{ item }}.conf"
+  with_items:
+  - 10-bridge
+  - 99-loopback

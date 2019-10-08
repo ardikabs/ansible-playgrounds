@@ -4,7 +4,7 @@ Documentation=https://github.com/GoogleCloudPlatform/kubernetes
 
 [Service]
 ExecStart={{ kube_homedir }}/bin/kube-proxy \
-  --cluster-cidr={{ kube_pod_cidr }} \
+  --cluster-cidr={{ kube_cluster_cidr }} \
   --masquerade-all=false \
   --kubeconfig={{ kube_homedir }}/config/kube-proxy.kubeconfig \
   --conntrack-min=1000000 \
