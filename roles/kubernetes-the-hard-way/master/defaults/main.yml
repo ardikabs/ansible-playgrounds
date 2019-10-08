@@ -1,7 +1,7 @@
----
-# defaults file for kube-master
 
-# ---- Miscellaneous ----
+# ------------------------
+# Certificates Definition
+# ------------------------
 csr:
   C: ID
   L: Jakarta
@@ -13,22 +13,29 @@ tls_ca: ca.pem
 tls_ca_key: ca-key.pem
 tls_ca_config: ca-config.json
 
-disable_swap: true
+# ------------------------
+# Miscellaneous
+# ------------------------
 
-# ---- Specification ----
-kube_bootstrap: false
-kube_version: "v1.12.0"
+disable_swap: True
+conntrack_size: 100000
+kube_bootstrap: False
+
+# ------------------------
+# Kubernetes Definition
+# ------------------------
+
 kube_homedir: "/home/kubernetes"
-kube_apiserver_count: "{{ groups['masters']|length }}"
+kube_version: v1.15.0
 kube_encryption_secret: "EToIrgBRKW8RJYO1AJC854U/1wpctz5X+Ng5WIY982A="
+kube_control_planes_count: 5
+kube_cluster_name: kubernetes
 
-kube_apiserver_external_address: 'apiserver.production.local'
+kube_control_planes_endpoint: 'apiserver.production.local'
 kube_service_cluster_ip_range: 10.32.0.0/24
-kube_service_node_port: 30000-32767
-kube_cluster_cidr: 10.200.0.0/16 # Kubernetes Cluster CIDR -> for Cluster scope
-
-kube_nproc: 1000000
-kube_nofile: 1000000
+kube_service_node_port_range: 30000-32767
+kube_proxy_mode: iptables
+kube_cluster_cidr: 10.200.0.0/16
 
 kube_admission_plugins:
   - NamespaceLifecycle
@@ -38,10 +45,12 @@ kube_admission_plugins:
   - DefaultStorageClass
   - ResourceQuota
 
-# ---- Datastore Configuration ----
-
 kube_storage_backend: etcd3
 kube_storage_media_type: application/vnd.kubernetes.protobuf
 
+# ------------------------
+# Datastore Definition
+# ------------------------
 etcd_tls_enabled: true
 etcd_endpoints: "https://127.0.0.1:2379"
+

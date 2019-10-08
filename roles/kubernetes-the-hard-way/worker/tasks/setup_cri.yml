@@ -1,0 +1,23 @@
+---
+- name: Install Docker
+  include_role:
+    name: docker
+  vars:
+    - version: "{{ docker_version }}"
+  when: kube_cri == "docker"
+
+- name: Remove docker systemd unit
+  file:
+    path: "/lib/systemd/system/docker.service"
+    state: absent
+
+- name: Replace docker systemd unit
+  template:
+    src: "services/docker.service.j2"
+    dest: "/lib/systemd/system/docker.service"
+
+- name: Restart docker services
+  systemd:
+    name: docker
+    state: restarted
+    daemon-reload: yes

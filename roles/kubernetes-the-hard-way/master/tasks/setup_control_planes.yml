@@ -1,0 +1,46 @@
+
+- name: Create Data Encryption Config
+  template:
+    src: "encryption-config.yaml.j2"
+    dest: "{{ kube_homedir }}/encryption-config.yaml"
+
+- name: Create kube-proxy configuration
+  template:
+    src: "kube-proxy-config.yaml.j2"
+    dest: "{{ kube_homedir }}/kube-proxy/kube-proxy-config.yaml"
+  ignore_errors: yes
+
+- name: Create systemd unit
+  template:
+    src: "services/{{ item }}.service.j2"
+    dest: "/etc/systemd/system/{{ item }}.service"
+  with_items:
+  - kube-apiserver
+  - kube-controller-manager
+  - kube-scheduler
+  - kube-proxy
+
+- name: Start and enable control-planes services
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: restarted
+    daemon-reload: yes
+  with_items:
+  - kube-apiserver
+  - kube-controller-manager
+  - kube-scheduler
+  - kube-proxy
+
+- name: Waiting for kube-apiserver to fully initialiazed
+  wait_for:
+    timeout: 60
+  run_once: yes
+
+- name: Apply RBAC for kubelet authorization
+  args:
+    chdir: "{{ kube_homedir }}"
+    stdin: "{{ rbac_kubelet }}"
+  shell: "/usr/local/bin/kubectl --kubeconfig=admin.kubeconfig apply -f - "
+  run_once: yes
+  when: kube_bootstrap

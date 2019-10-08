@@ -1,0 +1,18 @@
+[Unit]
+Description=Kubernetes Scheduler
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=0
+LimitNPROC=infinity
+LimitNOFILE=infinity
+
+ExecStart=/usr/local/bin/kube-scheduler \
+  --leader-elect=true \
+  --kubeconfig={{ kube_homedir }}/scheduler/kubeconfig \
+  --v=2
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,25 @@
+{
+  "CN": "kubernetes",
+  "hosts": [
+    "{{ ansible_default_ipv4.address }}",
+    "kubernetes",
+    "kubernetes.default",
+    "kubernetes.default.svc",
+    "{{ kube_service_ip.stdout }}",
+    "127.0.0.1"{% if kube_apiserver_external_address %},
+    "{{ kube_apiserver_external_address }}"{% endif %}
+  ],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "{{csr.C}}",
+      "L": "{{csr.L}}",
+      "O": "{{csr.O}}",
+      "OU": "{{csr.OU}}",
+      "ST": "{{csr.ST}}"
+    }
+  ]
+}

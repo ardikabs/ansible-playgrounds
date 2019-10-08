@@ -24,7 +24,7 @@
     name: calico-node
   vars:
     - calico_bootstrap: "{{ kube_bootstrap }}"
-    - calico_cluster_cidr: "{{ kube_pod_cidr }}"
+    - calico_cluster_cidr: "{{ kube_cluster_cidr }}"
   when: kube_cri == "docker"
 
 - name: Remove unnecessary package

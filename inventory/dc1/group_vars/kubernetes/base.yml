@@ -18,7 +18,8 @@ kube_apiserver_external_address: apiserver.production.local
 
 kube_service_cluster_ip_range: 10.32.0.0/24
 kube_service_node_port: 30000-32767
-kube_pod_cidr: 10.200.0.0/16
+kube_cluster_cidr: 10.200.0.0/16 # Kubernetes Cluster CIDR -> for Cluster scope
+kube_pod_cidr: 10.200.0.0/16 # Kubernetes Pod CIDR -> for Kubelet scope
 
 kube_admission_plugins:
   - NamespaceLifecycle
