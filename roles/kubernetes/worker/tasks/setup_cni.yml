@@ -22,7 +22,6 @@
 - name: Install calico node
   include_role:
     name: calico-node
-  become: yes
   vars:
     - calico_bootstrap: "{{ kube_bootstrap }}"
     - calico_cluster_cidr: "{{ kube_pod_cidr }}"
