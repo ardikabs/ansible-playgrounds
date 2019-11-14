@@ -10,5 +10,5 @@
 
 - name: Download etcd {{ etcd_version }} package
   get_url:
-    url: "https://github.com/coreos/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-amd64.tar.gz"
+    url: "https://github.com/coreos/etcd/releases/download/v{{ etcd_version }}/etcd-v{{ etcd_version }}-linux-amd64.tar.gz"
     dest: /tmp/etcd.tar.gz

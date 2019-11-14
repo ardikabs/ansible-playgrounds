@@ -26,7 +26,7 @@ kube_bootstrap: False
 # ------------------------
 
 kube_homedir: "/home/kubernetes"
-kube_version: v1.15.0
+kube_version: "1.15.0"
 kube_encryption_secret: "EToIrgBRKW8RJYO1AJC854U/1wpctz5X+Ng5WIY982A="
 kube_control_planes_count: 5
 kube_cluster_name: kubernetes

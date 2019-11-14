@@ -10,7 +10,7 @@
 
 - name: "Download Kubernetes {{ kube_version }} binaries"
   get_url:
-    url: "https://storage.googleapis.com/kubernetes-release/release/{{ kube_version }}/bin/linux/amd64/{{ item.unit }}"
+    url: "https://storage.googleapis.com/kubernetes-release/release/v{{ kube_version }}/bin/linux/amd64/{{ item.unit }}"
     dest: "{{ item.dest }}"
     mode: '0655'
   with_items:
