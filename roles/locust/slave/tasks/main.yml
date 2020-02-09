@@ -1,0 +1,10 @@
+
+- name: Install dependency
+  include_role:
+    name: locust/common
+  tags:
+  - install
+
+- include: setup.yml
+  tags:
+  - setup

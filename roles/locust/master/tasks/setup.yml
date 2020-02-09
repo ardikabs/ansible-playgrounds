@@ -1,0 +1,17 @@
+
+- name: Add locustfile.py
+  copy:
+    src: locustfile.py
+    dest: /opt/locustfile.py
+
+- name: Add locust-master systemd service unit
+  template:
+    src: locust-master.service.j2
+    dest: /etc/systemd/system/locust-master.service
+
+- name: Start and enable locust-master
+  systemd:
+    name: locust-master
+    state: started
+    daemon-reload: yes
+    enabled: yes
