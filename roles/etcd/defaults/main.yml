@@ -15,7 +15,7 @@ tls_key: etcd-key.pem
 
 etcd_basedir: /etc/etcd
 etcd_datadir: /var/lib/etcd
-etcd_version: v3.3.9
+etcd_version: 3.3.9
 etcd_tls_enabled: true
 
 etcd_cluster_state: new
