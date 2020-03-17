@@ -1,0 +1,9 @@
+# https://godoc.org/k8s.io/kube-proxy/config/v1alpha1#KubeProxyConfiguration
+---
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+kind: KubeProxyConfiguration
+clusterCIDR: "10.200.0.0/16"
+mode: iptables
+conntrack:
+  min: 1000000
+
