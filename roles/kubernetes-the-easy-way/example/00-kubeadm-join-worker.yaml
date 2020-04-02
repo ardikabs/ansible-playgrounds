@@ -5,10 +5,6 @@ kind: JoinConfiguration
 nodeRegistration:
   name: "kube-worker-0"
   criSocket: "/var/run/dockershim.sock"
-  taints:
-  - key: "node-role"
-    value: "worker"
-    effect: "NoSchedule"
   kubeletExtraArgs:
     cgroup-driver: "cgroupfs"
 discovery:

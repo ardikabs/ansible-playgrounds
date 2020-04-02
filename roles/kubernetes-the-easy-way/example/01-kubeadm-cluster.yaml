@@ -40,17 +40,19 @@ apiServer:
   timeoutForControlPlane: 4m0s
 controllerManager:
   extraArgs:
+    master: 127.0.0.1:6443
     address: 0.0.0.0
     configure-cloud-routes: "false"
     node-cidr-mask-size: "20"
     node-monitor-grace-period: 4m0s
     node-monitor-period: 5s
     pod-eviction-timeout: 5m0s
-    allocate-node-cidrs: true
+    allocate-node-cidrs: "true"
     service-cluster-ip-range: "10.32.0.0/16"
     v: "2"
 scheduler:
   extraArgs:
+    master: 127.0.0.1:6443
     address: 0.0.0.0
 certificatesDir: "/etc/kubernetes/pki"
 imageRepository: "k8s.gcr.io"

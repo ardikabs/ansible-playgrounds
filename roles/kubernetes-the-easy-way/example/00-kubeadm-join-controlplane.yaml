@@ -1,7 +1,7 @@
 # https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta1#JoinConfiguration
 # https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta1#NodeRegistrationOptions
 
-# kubeadm init phase upload-certs --upload-certs 2>/dev/null | egrep -o "^[a-zA-Z0-9].+$"
+# kubeadm init phase upload-certs --upload-certs 2>/dev/null | egrep -o "^[a-z0-9].+$"
 # kubeadm token create --ttl=1s --print-join-command 2>/dev/null | egrep -o "\bsha256.+$"
 
 apiVersion: kubeadm.k8s.io/v1beta2
@@ -18,7 +18,7 @@ nodeRegistration:
 caCertPath: /etc/kubernetes/pki/ca.crt
 controlPlane:
   localAPIEndpoint:
-    advertiseAddress: "10.252.100.1"
+    advertiseAddress: "10.252.100.11"
     bindPort: 6443
   certificateKey: 9ce8a0b4fa9fece487a50efc858096c917eae55d9c4b935fc11a7f3c377b52a0
 discovery:
