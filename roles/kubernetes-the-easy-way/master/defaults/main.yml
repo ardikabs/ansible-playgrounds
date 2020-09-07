@@ -1,3 +1,6 @@
+host_arch: "{{ host_architecture | default('amd64') }}"
 
-kubernetes_version: 1.17.0
-kubernetes_bootstrap: false
+kubeadm_version: 1.17.0
+
+kube_version: 1.17.0
+kube_bootstrap: false
