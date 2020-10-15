@@ -1,0 +1,30 @@
+
+- name: Create kubelet configuration
+  template:
+    src: "kubelet-config.yaml.j2"
+    dest: "{{ kube_homedir }}/kubelet/kubelet-config.yaml"
+  ignore_errors: yes
+
+- name: Create kube-proxy configuration
+  template:
+    src: "kube-proxy-config.yaml.j2"
+    dest: "{{ kube_homedir }}/kube-proxy/kube-proxy-config.yaml"
+  ignore_errors: yes
+
+- name: Create systemd unit
+  template:
+    src: "services/{{ item }}.service.j2"
+    dest: "/etc/systemd/system/{{ item }}.service"
+  with_items:
+  - kubelet
+  - kube-proxy
+
+- name: Start and enable services
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: restarted
+    daemon-reload: yes
+  with_items:
+  - kubelet
+  - kube-proxy

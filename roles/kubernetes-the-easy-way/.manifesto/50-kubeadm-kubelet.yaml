@@ -1,0 +1,45 @@
+# https://godoc.org/k8s.io/kubelet/config/v1beta1#KubeletConfiguration
+# --cert-dir flags default to /var/lib/kubelet/pki
+# --read-only-port 10255 default and 0 to disable
+# --port 10250 default and 0 to disable
+# static pod path could be static as filehostsystem --pod-manifest-path=/etc/kubernetes/manifests (https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/#configuration-files)
+# or static pod path statis as web-hosted manifest --manifest-url=https://pod-static.k8s.projects.ardika.io (https://kubernetes.io/docs/tasks/configure-pod-container/static-pod/#pods-created-via-http)
+
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+authentication:
+  anonymous:
+    enabled: false
+  webhook:
+    enabled: true
+  x509:
+    clientCAFile: "/etc/kubernetes/pki/ca.crt"
+authorization:
+  mode: Webhook
+rotateCertificates: true
+staticPodPath: /etc/kubernetes/manifests
+address: 0.0.0.0
+port: 10250
+readOnlyPort: 0
+healthzPort: 10248
+healthzBindAddress: 127.0.0.1
+clusterDomain: cluster.local
+clusterDNS:
+  - 10.32.0.10
+  - 1.1.1.1
+maxPods: 40
+podCIDR: 10.200.0.0/16 # only used in standalone mode which not required CNI plugin
+resolvConf: /etc/resolv.conf
+maxOpenFiles: 1000000
+systemReserved:
+  cpu: 2
+  memory: 4Gi
+kubeReserved:
+  cpu: 2
+  memory: 8Gi
+---
+apiVersion: kubelet.config.k8s.io/v1beta1
+kind: KubeletConfiguration
+staticPodURL: https://pod-static.k8s.projects.ardika.io
+staticPodURLHeader:
+  hostname: super-worker

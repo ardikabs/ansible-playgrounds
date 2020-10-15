@@ -17,7 +17,7 @@ disable_swap: true
 
 # ---- Specification ----
 kube_bootstrap: false
-kube_version: "v1.12.0"
+kube_version: "1.12.0"
 kube_homedir: "/home/kubernetes"
 kube_apiserver_count: "{{ groups['masters']|length }}"
 kube_encryption_secret: "EToIrgBRKW8RJYO1AJC854U/1wpctz5X+Ng5WIY982A="
@@ -25,7 +25,7 @@ kube_encryption_secret: "EToIrgBRKW8RJYO1AJC854U/1wpctz5X+Ng5WIY982A="
 kube_apiserver_external_address: 'apiserver.production.local'
 kube_service_cluster_ip_range: 10.32.0.0/24
 kube_service_node_port: 30000-32767
-kube_pod_cidr: 10.200.0.0/16
+kube_cluster_cidr: 10.200.0.0/16 # Kubernetes Cluster CIDR -> for Cluster scope
 
 kube_nproc: 1000000
 kube_nofile: 1000000

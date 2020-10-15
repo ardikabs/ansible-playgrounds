@@ -1,0 +1,48 @@
+---
+- name: Create CRI directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - /etc/containerd
+
+- name: Download cfssl & cfssljson
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+    mode: '0655'
+  with_items:
+  - { url: "https://github.com/opencontainers/runc/releases/download/v{{ runc_version }}/runc.amd64", dest: "/usr/local/bin/runc"}
+  - { url: "https://github.com/kubernetes-sigs/cri-tools/releases/download/v{{ kube_version }}/crictl-v{{ kube_version }}-linux-amd64.tar.gz", dest: "/tmp/crictl.tgz"}
+  - { url: "https://github.com/containerd/containerd/releases/download/v{{ containerd_version }}/containerd-{{ containerd_version }}.linux-amd64.tar.gz", dest: "/tmp/containerd.tgz"}
+
+- name: Extract CRI dependency
+  unarchive:
+    remote_src: yes
+    src: "/tmp/{{ item.unit }}.tgz"
+    dest: "/tmp/"
+    mode: "{{ item.mode }}"
+  with_items:
+  - {unit: crictl, mode: '0655'}
+  - {unit: containerd, mode: null}
+
+- name: Moving CRI dependency
+  shell: "{{ item }}"
+  with_items:
+  - mv /tmp/crictl /usr/local/bin
+  - mv /tmp/bin/* /bin/
+
+- name: Generate containerd configuration
+  template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+  - { src: "containerd-config.toml.j2", dest: "/etc/containerd/config.toml"}
+  - { src: "services/containerd.service.j2", dest: "/etc/systemd/system/containerd.service"}
+
+- name: Restart containerd services
+  systemd:
+    name: containerd
+    state: restarted
+    daemon-reload: yes

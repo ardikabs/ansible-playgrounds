@@ -1,0 +1,5 @@
+inventory/**/*
+!inventory/dc1/
+
+plays/**/*
+!plays/dc1/

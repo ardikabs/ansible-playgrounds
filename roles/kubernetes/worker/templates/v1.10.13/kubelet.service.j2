@@ -5,12 +5,6 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-Type=notify
-Restart=always
-RestartSec=10
-LimitNPROC={{ kube_nproc }}
-LimitNOFILE={{ kube_nofile }}
-
 ExecStart={{ kube_homedir }}/bin/kubelet \
   --config={{ kube_homedir }}/config/kubelet-config.yaml \
   \
@@ -39,6 +33,11 @@ ExecStart={{ kube_homedir }}/bin/kubelet \
   --root-dir={{ kube_homedir }} \
   --experimental-allowed-unsafe-sysctls 'net.core.somaxconn'\
   --v=2
+Restart=always
+RestartSec=10
+LimitNPROC={{ kube_nproc }}
+LimitNOFILE={{ kube_nofile }}
+
 
 [Install]
 WantedBy=multi-user.target

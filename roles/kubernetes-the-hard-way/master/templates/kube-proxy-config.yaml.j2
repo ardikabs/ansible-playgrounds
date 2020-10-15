@@ -1,0 +1,8 @@
+kind: KubeProxyConfiguration
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+clientConnection:
+  kubeconfig: "{{ kube_homedir }}/kube-proxy/kubeconfig"
+mode: "{{ kube_proxy_mode }}"
+clusterCIDR: "{{ kube_cluster_cidr }}"
+conntrack:
+  min: "{{ conntrack_size }}"

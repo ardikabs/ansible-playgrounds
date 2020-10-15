@@ -1,0 +1,18 @@
+
+- name: Add locustfile.py
+  copy:
+    src: locustfile.py
+    dest: /opt/locustfile.py
+
+- name: Add locust-slave systemd service unit
+  template:
+    src: locust-slave@.service.j2
+    dest: /etc/systemd/system/locust-slave@.service
+
+- name: Start and enable locust-slave
+  systemd:
+    name: "locust-slave@{{ item }}"
+    state: started
+    daemon-reload: yes
+    enabled: yes
+  with_sequence: count={{ slave_threads }}

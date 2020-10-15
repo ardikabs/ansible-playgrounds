@@ -1,0 +1,27 @@
+[Unit]
+Description=Kubernetes Kubelet
+Documentation=https://github.com/kubernetes/kubernetes
+After=containerd.service
+Requires=containerd.service
+
+[Service]
+ExecStart=/usr/local/bin/kubelet \
+  --config={{ kube_homedir }}/kubelet/kubelet-config.yaml \
+  --kubeconfig={{ kube_homedir }}/kubelet/kubeconfig \
+  --image-pull-progress-deadline=2m \
+  --container-runtime={{ kube_cri }} \
+  --container-runtime-endpoint=unix:///var/run/containerd/containerd.sock \
+  --network-plugin={{ kube_network_plugin }} \
+  --register-node=true \
+  --node-labels={{ kube_node_labels | join(',') }} \
+  --kube-reserved={{ kube_reserved }} \
+  --system-reserved={{ kube_system_reserved }} \
+  --v=2
+Restart=always
+RestartSec=10
+LimitNPROC=infinity
+LimitNOFILE=infinity
+
+
+[Install]
+WantedBy=multi-user.target

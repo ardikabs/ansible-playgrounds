@@ -1,0 +1,30 @@
+---
+- name: Download cfssl & cfssljson
+  get_url:
+    url: "{{ item.url }}"
+    dest: "{{ item.dest }}"
+    mode: '0655'
+  with_items:
+  - { url: "https://pkg.cfssl.org/R1.2/cfssl_linux-amd64",     dest: "/usr/bin/cfssl"}
+  - { url: "https://pkg.cfssl.org/R1.2/cfssljson_linux-amd64", dest: "/usr/bin/cfssljson" }
+
+- name: "Download Kubernetes {{ kube_version }} binaries"
+  get_url:
+    url: "https://storage.googleapis.com/kubernetes-release/release/v{{ kube_version }}/bin/linux/amd64/{{ item.unit }}"
+    dest: "{{ item.dest }}"
+    mode: '0655'
+  with_items:
+  - { unit: "kubelet", dest: "/usr/local/bin" }
+  - { unit: "kube-proxy", dest: "/usr/local/bin"}
+  - { unit: "kubectl", dest: "/usr/local/bin"}
+
+- name: Download Kubernetes worker dependencies
+  apt:
+    name: "{{ packages }}"
+    state: present
+    update_cache: yes
+  vars:
+    packages:
+        - socat
+        - conntrack
+        - ipset

@@ -1,0 +1,29 @@
+[Unit]
+Description=Kubernetes Controller Manager
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=0
+LimitNPROC=infinity
+LimitNOFILE=infinity
+
+ExecStart=/usr/local/bin/kube-controller-manager \
+  --kubeconfig={{ kube_homedir }}/controller-manager/kubeconfig \
+  --leader-elect=true \
+  --cluster-name={{ kube_cluster_name }} \
+  --bind-address=0.0.0.0 \
+  --allocate-node-cidrs=true \
+  --cluster-cidr={{ kube_cluster_cidr }} \
+  --service-cluster-ip-range={{ kube_service_cluster_ip_range }} \
+  --node-cidr-mask-size=24 \
+  --root-ca-file={{ kube_homedir }}/certs/ca.pem \
+  --cluster-signing-cert-file={{ kube_homedir }}/certs/ca.pem \
+  --cluster-signing-key-file={{ kube_homedir }}/certs/ca-key.pem \
+  --service-account-private-key-file={{ kube_homedir }}/certs/service-account-key.pem \
+  --use-service-account-credentials=true \
+  --v=2
+
+[Install]
+WantedBy=multi-user.target

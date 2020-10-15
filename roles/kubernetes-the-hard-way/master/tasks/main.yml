@@ -1,0 +1,23 @@
+
+- name: Create Kubernetes directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+  with_items:
+    - "{{ kube_homedir }}"
+    - "{{ kube_homedir }}/certs"
+    - "{{ kube_homedir }}/controller-manager"
+    - "{{ kube_homedir }}/scheduler"
+    - "{{ kube_homedir }}/kube-proxy"
+  tags:
+    - install
+
+- include: install.yml
+- include: gen_certs.yml
+- include: gen_kubeconfig.yml
+- include: disable_swap.yml
+- include: setup_control_planes.yml
+  tags: tok
+- include: setup_health_check.yml
+- include: smoke_test.yml

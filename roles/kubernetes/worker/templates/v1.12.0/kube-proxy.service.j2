@@ -3,12 +3,11 @@ Description=Kubernetes Kube Proxy
 Documentation=https://github.com/kubernetes/kubernetes
 
 [Service]
-Type=notify
+ExecStart={{ kube_homedir }}/bin/kube-proxy \
+  --config={{ kube_homedir }}/config/kube-proxy-config.yaml \
+  --v=2
 Restart=always
 RestartSec=10
-
-ExecStart={{ kube_homedir }}/bin/kube-proxy \
-  --config={{ kube_homedir }}/config/kube-proxy-config.yaml
 
 [Install]
 WantedBy=multi-user.target

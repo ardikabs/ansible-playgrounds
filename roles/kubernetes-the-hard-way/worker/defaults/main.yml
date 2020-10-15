@@ -1,0 +1,54 @@
+# defaults file for kube-worker
+
+# ------------------------
+# Certificates Definition
+# ------------------------
+csr:
+  C: ID
+  L: Jakarta
+  O: Kubernetes
+  OU: Kubernetes Cluster 01
+  ST: Jakarta Selatan
+
+tls_ca: ca.pem
+tls_ca_key: ca-key.pem
+tls_ca_config: ca-config.json
+
+# ------------------------
+# Miscellaneous
+# ------------------------
+
+disable_swap: True
+conntrack_size: 100000
+
+# ------------------------
+# Kubernetes Definition
+# ------------------------
+
+kube_bootstrap: false
+kube_version: "v1.15.0"
+kube_homedir: "/home/kubernetes"
+kube_cri: remote
+kube_max_pods: 40
+
+kube_apiserver_external_address: "apiserver.production.local"
+kube_node_labels:
+  - node-role.kubernetes.io/worker=true
+kube_reserved: "cpu=200m,memory=500Mi"
+kube_system_reserved: "cpu=200m,memory=500Mi"
+
+kube_proxy_mode: iptables
+kube_cluster_domain: "cluster.local"
+kube_cluster_dns: "10.32.0.10"
+kube_cluster_cidr: 10.200.0.0/16 # Kubernetes Cluster CIDR -> for Cluster scope
+kube_pod_cidr: 10.200.0.0/24 # Kubernetes Pod CIDR -> for Kubelet scope
+kube_network_plugin: cni
+kube_cni_version: 0.6.0
+
+
+# ------------------------
+# CRI Definition
+# ------------------------
+
+containerd_version: v1.2.9
+runc_version: v1.0.0-rc8

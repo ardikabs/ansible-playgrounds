@@ -1,0 +1,30 @@
+# https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta1#JoinConfiguration
+# https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta1#NodeRegistrationOptions
+
+# kubeadm init phase upload-certs --upload-certs 2>/dev/null | egrep -o "^[a-z0-9].+$"
+# kubeadm token create --ttl=1s --print-join-command 2>/dev/null | egrep -o "\bsha256.+$"
+
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: JoinConfiguration
+nodeRegistration:
+  name: "kube-master-1"
+  criSocket: "/var/run/dockershim.sock"
+  taints:
+  - key: "node-role"
+    value: "master"
+    effect: "NoSchedule"
+  kubeletExtraArgs:
+    cgroup-driver: "cgroupfs"
+caCertPath: /etc/kubernetes/pki/ca.crt
+controlPlane:
+  localAPIEndpoint:
+    advertiseAddress: "10.252.100.11"
+    bindPort: 6443
+  certificateKey: 9ce8a0b4fa9fece487a50efc858096c917eae55d9c4b935fc11a7f3c377b52a0
+discovery:
+  bootstrapToken:
+    token: 783bde.3f89s0fje9f38fhf
+    apiServerEndpoint: k8s.projects.ardika.io:6443
+    caCertHashes:
+    - sha256:15d8e86100fdbca627ce702b30b85d3764ef9f012c43fb7d20c1687c3bad050d
+  timeout: 3m

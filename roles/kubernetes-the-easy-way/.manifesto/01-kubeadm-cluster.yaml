@@ -1,0 +1,63 @@
+# https://godoc.org/k8s.io/kubernetes/cmd/kubeadm/app/apis/kubeadm/v1beta1#ClusterConfiguration
+
+apiVersion: kubeadm.k8s.io/v1beta2
+kind: ClusterConfiguration
+etcd:
+  external:
+    endpoints:
+    - "10.252.100.10:2379"
+    - "10.252.100.11:2379"
+    - "10.252.100.12:2379"
+    caFile: "/etc/etcd/certs/etcd-ca.pem"
+    certFile: "/etc/etcd/certs/etcd.pem"
+    keyFile: "/etc/etcd/certs/etcd-key.pem"
+networking:
+  serviceSubnet: "10.32.0.0/16"
+  podSubnet: "10.200.0.0/16"
+  dnsDomain: "cluster.local"
+kubernetesVersion: "v1.16.0"
+controlPlaneEndpoint: "k8s.projects.ardika.io:6443"
+apiServer:
+  extraArgs:
+    allow-privileged: "true"
+    authorization-mode: "Node,RBAC"
+    bind-address: 0.0.0.0
+    kubelet-preferred-address-types: InternalDNS,InternalIP,Hostname,ExternalDNS,ExternalIP
+    service-node-port-range: 30000-32767
+    storage-backend: etcd3
+    storage-media-type: application/vnd.kubernetes.protobuf
+    insecure-port: "0"
+    event-ttl: "1h"
+    v: "2"
+  certSANs:
+  - 10.32.0.1
+  - 127.0.0.1
+  - 10.252.100.10
+  - k8s.projects.ardika.io
+  - kubernetes
+  - kubernetes.default
+  - kubernetes.default.svc
+  timeoutForControlPlane: 4m0s
+controllerManager:
+  extraArgs:
+    master: 127.0.0.1:6443
+    address: 0.0.0.0
+    configure-cloud-routes: "false"
+    node-cidr-mask-size: "20"
+    node-monitor-grace-period: 4m0s
+    node-monitor-period: 5s
+    pod-eviction-timeout: 5m0s
+    allocate-node-cidrs: "true"
+    service-cluster-ip-range: "10.32.0.0/16"
+    v: "2"
+scheduler:
+  extraArgs:
+    master: 127.0.0.1:6443
+    address: 0.0.0.0
+certificatesDir: "/etc/kubernetes/pki"
+imageRepository: "k8s.gcr.io"
+useHyperKubeImage: false
+clusterName: "example-cluster"
+dns:
+  type: CoreDNS
+

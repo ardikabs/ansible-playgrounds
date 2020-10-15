@@ -1,0 +1,13 @@
+- name: Install python pip
+  apt:
+    pkg: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+      - python-pip
+      - python3-pip
+
+- name: Install locustio
+  pip:
+    name: locustio
+    executable: pip3

@@ -3,7 +3,7 @@ apiVersion: kubeproxy.config.k8s.io/v1alpha1
 clientConnection:
   kubeconfig: "{{ kube_homedir }}/config/kube-proxy.kubeconfig"
 mode: "{{ kube_proxy_mode }}"
-clusterCIDR: "{{ kube_pod_cidr }}"
+clusterCIDR: "{{ kube_cluster_cidr }}"
 iptables:
   masqueradeAll: false
 conntrack:

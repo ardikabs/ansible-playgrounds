@@ -1,0 +1,16 @@
+[Unit]
+Description=Locust master
+Documentation=https://locust.io
+Requires=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/local/bin/locust -f /opt/locustfile.py --master --master-bind-host={{ master_bind_host }} --master-bind-port={{ master_bind_port }}
+PermissionsStartOnly=true
+LimitNPROC=infinity
+LimitNOFILE=infinity
+
+[Install]
+WantedBy=multi-user.target
